@@ -1,8 +1,8 @@
-# daily_zameen_scraper_full.py
+# automated_scraper.py
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
 from bs4 import BeautifulSoup
 import csv
 import time
@@ -17,7 +17,8 @@ import pandas as pd
 BASE_URL = "https://www.zameen.com/Flats_Apartments/Karachi-2-{}.html"
 HEADLESS = True
 VISIT_AGENCY_PROFILES = True
-SINGLE_LISTING_MODE = False  # True for quick test
+SINGLE_LISTING_MODE = False
+MAX_PAGES = 10
 
 DAILY_CSV = "zameen_karachi_flats_today.csv"
 WEEKLY_CSV = "zameen_karachi_flats_last_7_days.csv"
@@ -26,13 +27,20 @@ WEEKLY_CSV = "zameen_karachi_flats_last_7_days.csv"
 # Selenium Setup
 #####################
 options = Options()
-if HEADLESS:
-    options.add_argument("--headless")
+options.add_argument("--headless")
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
 options.add_argument("--disable-gpu")
 options.add_argument("--window-size=1920,1080")
 options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
 options.add_argument("--disable-blink-features=AutomationControlled")
-driver = webdriver.Chrome(options=options)
+
+# Use system chromedriver installed by the workflow
+driver = webdriver.Chrome(
+    service=Service("/usr/bin/chromedriver"),
+    options=options
+)
+driver.set_page_load_timeout(30)
 
 #####################
 # Helper Functions
@@ -113,7 +121,6 @@ def get_agency_profile_data(driver, agency_url):
         soup = BeautifulSoup(driver.page_source, "html.parser")
         data = {}
 
-        # Total agent listings
         total_agent_listings = None
         try:
             count_divs = soup.find_all("div", class_="fw-700 u-mb4")
@@ -149,16 +156,23 @@ def get_agency_profile_data(driver, agency_url):
 #####################
 all_listings_today = []
 page = 1
-while True:
+
+while page <= MAX_PAGES:
     url = BASE_URL.format(page)
-    print(f"\nScraping page {page} → {url}")
-    driver.get(url)
+    print(f"\nScraping page {page}/{MAX_PAGES} → {url}")
+
+    try:
+        driver.get(url)
+    except Exception as e:
+        print(f"Failed to load page {page}: {e}")
+        break
+
     time.sleep(3)
 
     soup = BeautifulSoup(driver.page_source, "html.parser")
     listings = soup.find_all("article")
     if not listings:
-        print("No listings found on this page. Stopping pagination.")
+        print("No listings found on this page. Stopping.")
         break
 
     todays_listing_found = False
@@ -171,7 +185,12 @@ while True:
         if "/new-projects/" in link:
             continue
 
-        driver.get(link)
+        try:
+            driver.get(link)
+        except Exception as e:
+            print(f"Failed to load listing: {e}")
+            continue
+
         time.sleep(2)
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(1)
@@ -179,11 +198,11 @@ while True:
         detail_soup = BeautifulSoup(driver.page_source, "html.parser")
         posted_date_tag = detail_soup.find("span", {"aria-label": "Creation date"})
         posted_date = posted_date_tag.get_text(strip=True) if posted_date_tag else None
+
         if not is_posted_today(posted_date):
             continue
         todays_listing_found = True
 
-        # Extract details
         title = safe_text(detail_soup.find("h1"))
         price = price_to_number(detail_soup.select_one("span[aria-label='Price']").get_text(strip=True)
                                 if detail_soup.select_one("span[aria-label='Price']") else None)
@@ -214,18 +233,17 @@ while True:
         phone_number = extract_phone_number(driver)
         email = extract_email(driver)
 
-        # Enhanced agency data
         if VISIT_AGENCY_PROFILES and agency_url:
             agency_data = get_agency_profile_data(driver, agency_url)
-            if agency_data.get('total_agent_listings'):
-                total_agent_listings = agency_data['total_agent_listings']
-            else:
-                total_agent_listings = None
+            total_agent_listings = agency_data.get('total_agent_listings', None)
             if agency_data.get('phone_number') and not phone_number:
                 phone_number = agency_data['phone_number']
             if agency_data.get('email') and not email:
                 email = agency_data['email']
-            driver.get(link)
+            try:
+                driver.get(link)
+            except:
+                pass
             time.sleep(1)
         else:
             total_agent_listings = None
@@ -250,6 +268,8 @@ while True:
             "email": email
         })
 
+        print(f"  ✓ Scraped: {title} | {location}")
+
         if SINGLE_LISTING_MODE:
             print("⚡ SINGLE LISTING MODE: Stopping after 1 listing")
             break
@@ -258,10 +278,12 @@ while True:
         break
 
     if not todays_listing_found:
-        print("No listings posted today on this page. Stopping pagination.")
+        print("No listings posted today on this page. Stopping.")
         break
 
     page += 1
+
+print(f"\nTotal listings scraped today: {len(all_listings_today)}")
 
 #################
 # Save daily CSV
@@ -276,7 +298,6 @@ with open(DAILY_CSV, "w", newline="", encoding='utf-8') as f:
     writer.writeheader()
     writer.writerows(all_listings_today)
 
-print(f"\nDaily scraping done. Listings today: {len(all_listings_today)}")
 print(f"Saved to {DAILY_CSV}")
 
 #################
@@ -289,8 +310,7 @@ if os.path.exists(WEEKLY_CSV):
     cutoff = datetime.now() - timedelta(days=7)
     weekly_listings = df_week[df_week['posted_date_parsed'] >= cutoff].to_dict('records')
 
-# Remove duplicates by property_id
-existing_ids = {l['property_id'] for l in weekly_listings if l['property_id']}
+existing_ids = {l['property_id'] for l in weekly_listings if l.get('property_id')}
 for l in all_listings_today:
     if l['property_id'] not in existing_ids:
         weekly_listings.append(l)
