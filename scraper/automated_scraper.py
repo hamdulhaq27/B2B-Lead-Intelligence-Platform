@@ -17,7 +17,7 @@ import pandas as pd
 BASE_URL = "https://www.zameen.com/Flats_Apartments/Karachi-2-{}.html"
 HEADLESS = True
 VISIT_AGENCY_PROFILES = True
-SINGLE_LISTING_MODE = True  # True for quick test
+SINGLE_LISTING_MODE = False  # True for quick test
 
 DAILY_CSV = "zameen_karachi_flats_today.csv"
 WEEKLY_CSV = "zameen_karachi_flats_last_7_days.csv"
