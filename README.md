@@ -9,9 +9,9 @@
 
 | Service | URL |
 |---|---|
-| 🖥️ Frontend | [zameen-intelligence.vercel.app](https://zameen-intelligence.vercel.app) |
-| ⚙️ Backend API | [zameen-intelligence.onrender.com](https://zameen-intelligence.onrender.com) |
-| 📖 API Docs | [zameen-intelligence.onrender.com/docs](https://zameen-intelligence.onrender.com/docs) |
+| 🖥️ Frontend | [b2-b-lead-intelligence-platform.vercel.app](https://b2-b-lead-intelligence-platform.vercel.app/) |
+| ⚙️ Backend API | [b2b-lead-intelligence-platform.onrender.com](https://b2b-lead-intelligence-platform.onrender.com) |
+| 📖 API Docs | [b2b-lead-intelligence-platform.onrender.com/docs](https://b2b-lead-intelligence-platform.onrender.com/docs) |
 
 ---
 
