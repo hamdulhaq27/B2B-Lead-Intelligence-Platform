@@ -1,0 +1,46 @@
+name: Daily Scrape & Process
+
+on:
+  schedule:
+    - cron: "0 2 * * *"  # 7AM PKT daily
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Chrome
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q google-chrome-stable
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run scraper
+        run: python scraper/automated_scraper.py
+
+      - name: Run preprocessing
+        run: python preprocessing.py
+
+      - name: Run segmentation
+        run: python market_segmentation.py
+
+      - name: Run scoring
+        run: python scoring.py
+
+      - name: Commit updated CSVs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git diff --cached --quiet || git commit -m "data: daily update $(date -u +%Y-%m-%d)"
+          git push
