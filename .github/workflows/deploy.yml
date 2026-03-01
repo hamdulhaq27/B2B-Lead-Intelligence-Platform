@@ -6,18 +6,15 @@ on:
     paths:
       - "backend/**"
       - "Dockerfile"
+      - "data/**"
+      - "zameen_market_segments.csv"
+      - "zameen_karachi_flats_today.csv"
+      - "zameen_karachi_flats_last_7_days.csv"
   workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-
-      - name: Deploy to Railway
-        run: railway up --service zameen-intel
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      - name: Trigger Render Deploy Hook
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}

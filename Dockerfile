@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.11-slim
 
 WORKDIR /project
 
@@ -11,9 +11,7 @@ COPY data/ ./data/
 COPY market_segmentation.py .
 COPY preprocessing.py .
 COPY scoring.py .
-COPY zameen_karachi_flats_today.csv .
-COPY zameen_karachi_flats_last_7_days.csv .
-COPY zameen_market_segments.csv .
+COPY *.csv ./
 
 EXPOSE 8000
 
