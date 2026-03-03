@@ -1,6 +1,5 @@
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 import pandas as pd
 import os
 from typing import Optional
@@ -9,24 +8,51 @@ app = FastAPI(title="Zameen Intelligence API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://b2-b-lead-intelligence-platform.vercel.app",
+        "http://localhost:3000",
+        "http://localhost:8000",
+        "*",
+    ],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+print(f"ROOT_DIR resolved to: {ROOT_DIR}")
+print(f"Files in ROOT_DIR: {os.listdir(ROOT_DIR)}")
 
 def load_today():
-    path = os.path.join(DATA_DIR, "zameen_karachi_flats_today.csv")
+    path = os.path.join(ROOT_DIR, "zameen_karachi_flats_today.csv")
+    print(f"Loading today: {path} — exists: {os.path.exists(path)}")
     return pd.read_csv(path) if os.path.exists(path) else pd.DataFrame()
 
 def load_weekly():
-    path = os.path.join(DATA_DIR, "zameen_karachi_flats_last_7_days.csv")
+    path = os.path.join(ROOT_DIR, "zameen_karachi_flats_last_7_days.csv")
+    print(f"Loading weekly: {path} — exists: {os.path.exists(path)}")
     return pd.read_csv(path) if os.path.exists(path) else pd.DataFrame()
 
 def load_scored():
-    path = os.path.join(DATA_DIR, "zameen_market_segments.csv")
+    path = os.path.join(ROOT_DIR, "zameen_market_segments.csv")
+    print(f"Loading scored: {path} — exists: {os.path.exists(path)}")
     return pd.read_csv(path) if os.path.exists(path) else pd.DataFrame()
+
+
+@app.get("/health")
+def health():
+    scored_path = os.path.join(ROOT_DIR, "zameen_market_segments.csv")
+    today_path = os.path.join(ROOT_DIR, "zameen_karachi_flats_today.csv")
+    weekly_path = os.path.join(ROOT_DIR, "zameen_karachi_flats_last_7_days.csv")
+    return {
+        "status": "ok",
+        "root_dir": ROOT_DIR,
+        "files_at_root": os.listdir(ROOT_DIR),
+        "scored_exists": os.path.exists(scored_path),
+        "today_exists": os.path.exists(today_path),
+        "weekly_exists": os.path.exists(weekly_path),
+    }
 
 
 @app.get("/api/summary")
@@ -34,14 +60,14 @@ def summary():
     df = load_scored()
     today = load_today()
     if df.empty:
-        return {}
+        return {"error": "scored CSV is empty or not found", "root_dir": ROOT_DIR}
     return {
         "total_leads": len(df),
         "today_leads": len(today),
-        "avg_lead_score": round(df["lead_score"].mean(), 1) if "lead_score" in df else 0,
-        "avg_price": int(df["price"].mean()) if "price" in df else 0,
-        "verified_agencies": int(df["verified_agency"].str.lower().eq("verified").sum()) if "verified_agency" in df else 0,
-        "segments": df["market_segment"].value_counts().to_dict() if "market_segment" in df else {},
+        "avg_lead_score": round(df["lead_score"].mean(), 1) if "lead_score" in df.columns else 0,
+        "avg_price": int(df["price"].mean()) if "price" in df.columns else 0,
+        "verified_agencies": int(df["verified_agency"].str.lower().eq("verified").sum()) if "verified_agency" in df.columns else 0,
+        "segments": df["market_segment"].value_counts().to_dict() if "market_segment" in df.columns else {},
     }
 
 
@@ -127,6 +153,3 @@ def location_stats():
     return grouped.where(pd.notna(grouped), None).to_dict(orient="records")
 
 
-@app.get("/health")
-def health():
-    return {"status": "ok"}
