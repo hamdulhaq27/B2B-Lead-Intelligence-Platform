@@ -1,57 +1,54 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import Response
 import pandas as pd
 import os
 from typing import Optional
 
 app = FastAPI(title="Zameen Intelligence API")
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "https://b2-b-lead-intelligence-platform.vercel.app",
-        "http://localhost:3000",
-        "http://localhost:8000",
-        "*",
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Custom middleware that always adds CORS headers to every response
+class CORSMiddlewareCustom(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        if request.method == "OPTIONS":
+            response = Response()
+            response.headers["Access-Control-Allow-Origin"] = "*"
+            response.headers["Access-Control-Allow-Methods"] = "*"
+            response.headers["Access-Control-Allow-Headers"] = "*"
+            return response
+        response = await call_next(request)
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "*"
+        return response
+
+app.add_middleware(CORSMiddlewareCustom)
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
-print(f"ROOT_DIR resolved to: {ROOT_DIR}")
-print(f"Files in ROOT_DIR: {os.listdir(ROOT_DIR)}")
-
 def load_today():
     path = os.path.join(ROOT_DIR, "zameen_karachi_flats_today.csv")
-    print(f"Loading today: {path} — exists: {os.path.exists(path)}")
     return pd.read_csv(path) if os.path.exists(path) else pd.DataFrame()
 
 def load_weekly():
     path = os.path.join(ROOT_DIR, "zameen_karachi_flats_last_7_days.csv")
-    print(f"Loading weekly: {path} — exists: {os.path.exists(path)}")
     return pd.read_csv(path) if os.path.exists(path) else pd.DataFrame()
 
 def load_scored():
     path = os.path.join(ROOT_DIR, "zameen_market_segments.csv")
-    print(f"Loading scored: {path} — exists: {os.path.exists(path)}")
     return pd.read_csv(path) if os.path.exists(path) else pd.DataFrame()
 
 
 @app.get("/health")
 def health():
-    scored_path = os.path.join(ROOT_DIR, "zameen_market_segments.csv")
-    today_path = os.path.join(ROOT_DIR, "zameen_karachi_flats_today.csv")
-    weekly_path = os.path.join(ROOT_DIR, "zameen_karachi_flats_last_7_days.csv")
     return {
         "status": "ok",
         "root_dir": ROOT_DIR,
-        "files_at_root": os.listdir(ROOT_DIR),
-        "scored_exists": os.path.exists(scored_path),
-        "today_exists": os.path.exists(today_path),
-        "weekly_exists": os.path.exists(weekly_path),
+        "scored_exists": os.path.exists(os.path.join(ROOT_DIR, "zameen_market_segments.csv")),
+        "today_exists": os.path.exists(os.path.join(ROOT_DIR, "zameen_karachi_flats_today.csv")),
+        "weekly_exists": os.path.exists(os.path.join(ROOT_DIR, "zameen_karachi_flats_last_7_days.csv")),
+        "files": [f for f in os.listdir(ROOT_DIR) if f.endswith(".csv")]
     }
 
 
@@ -60,7 +57,7 @@ def summary():
     df = load_scored()
     today = load_today()
     if df.empty:
-        return {"error": "scored CSV is empty or not found", "root_dir": ROOT_DIR}
+        return {"total_leads": 0, "today_leads": 0, "avg_lead_score": 0, "avg_price": 0, "verified_agencies": 0, "segments": {}}
     return {
         "total_leads": len(df),
         "today_leads": len(today),
@@ -117,15 +114,12 @@ def top_leads(limit: int = 10):
 def weekly_trends():
     df = load_weekly()
     if df.empty:
-        return {"days": [], "counts": [], "avg_scores": []}
+        return {"days": [], "counts": []}
     df["parsed_date"] = pd.to_datetime(df["posted_date"], errors="coerce")
     df = df.dropna(subset=["parsed_date"])
     df["day"] = df["parsed_date"].dt.date.astype(str)
     grouped = df.groupby("day").agg(count=("price", "count")).reset_index()
-    return {
-        "days": grouped["day"].tolist(),
-        "counts": grouped["count"].tolist(),
-    }
+    return {"days": grouped["day"].tolist(), "counts": grouped["count"].tolist()}
 
 
 @app.get("/api/trends/segments")
@@ -151,5 +145,3 @@ def location_stats():
         avg_score=("lead_score", "mean"),
     ).reset_index().sort_values("count", ascending=False).head(20)
     return grouped.where(pd.notna(grouped), None).to_dict(orient="records")
-
-
