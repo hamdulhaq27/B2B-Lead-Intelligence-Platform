@@ -1,30 +1,22 @@
-from fastapi import FastAPI, Query, Request
+# main.py
+
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.responses import Response
 import pandas as pd
 import os
 from typing import Optional
 
 app = FastAPI(title="Zameen Intelligence API")
 
-# Custom middleware that always adds CORS headers to every response
-class CORSMiddlewareCustom(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        if request.method == "OPTIONS":
-            response = Response()
-            response.headers["Access-Control-Allow-Origin"] = "*"
-            response.headers["Access-Control-Allow-Methods"] = "*"
-            response.headers["Access-Control-Allow-Headers"] = "*"
-            return response
-        response = await call_next(request)
-        response.headers["Access-Control-Allow-Origin"] = "*"
-        response.headers["Access-Control-Allow-Methods"] = "*"
-        response.headers["Access-Control-Allow-Headers"] = "*"
-        return response
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://b2-b-lead-intelligence-platform.vercel.app"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-app.add_middleware(CORSMiddlewareCustom)
-
+# CSVs are at project root, backend/main.py is one level down
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 def load_today():
@@ -48,7 +40,7 @@ def health():
         "scored_exists": os.path.exists(os.path.join(ROOT_DIR, "zameen_market_segments.csv")),
         "today_exists": os.path.exists(os.path.join(ROOT_DIR, "zameen_karachi_flats_today.csv")),
         "weekly_exists": os.path.exists(os.path.join(ROOT_DIR, "zameen_karachi_flats_last_7_days.csv")),
-        "files": [f for f in os.listdir(ROOT_DIR) if f.endswith(".csv")]
+        "files": os.listdir(ROOT_DIR),
     }
 
 
