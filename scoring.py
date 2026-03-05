@@ -79,4 +79,6 @@ if __name__ == "__main__":
     scored_df = scorer.score_leads(df)
     scored_df.to_csv("zameen_market_segments.csv", index=False)
     print(f"Scoring done. {len(scored_df)} leads scored.")
-    print(scored_df[["title", "price", "lead_score"]].sort_values("lead_score", ascending=False).head(5))
+    # Show whatever columns are available
+    display_cols = [c for c in ["title", "location", "price", "lead_score"] if c in scored_df.columns]
+    print(scored_df[display_cols].sort_values("lead_score", ascending=False).head(5))

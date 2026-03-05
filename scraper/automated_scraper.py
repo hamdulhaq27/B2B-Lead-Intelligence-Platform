@@ -3,6 +3,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from bs4 import BeautifulSoup
 import csv
 import time
@@ -41,6 +42,45 @@ driver = webdriver.Chrome(
     options=options
 )
 driver.set_page_load_timeout(30)
+
+#####################
+# Retry / Timeout Logic
+#####################
+MAX_RETRIES = 3
+RETRY_DELAY = 5  # seconds to wait between retries
+
+def load_url_with_retry(driver, url, retries=MAX_RETRIES, delay=RETRY_DELAY):
+    """
+    Attempts to load a URL up to `retries` times.
+    On TimeoutException, executes document.stop() to halt the load and
+    work with whatever content has already arrived, then retries if needed.
+    Returns True if the page loaded successfully (or partially), False if all retries fail.
+    """
+    for attempt in range(1, retries + 1):
+        try:
+            driver.get(url)
+            return True
+        except TimeoutException:
+            print(f"  ⚠ Timeout on attempt {attempt}/{retries} for: {url}")
+            try:
+                driver.execute_script("window.stop();")  # stop further loading
+            except Exception:
+                pass
+            if attempt < retries:
+                print(f"  ↻ Retrying in {delay}s...")
+                time.sleep(delay)
+            else:
+                print(f"  ✗ All {retries} attempts timed out. Skipping: {url}")
+                return False
+        except WebDriverException as e:
+            print(f"  ⚠ WebDriverException on attempt {attempt}/{retries}: {e}")
+            if attempt < retries:
+                print(f"  ↻ Retrying in {delay}s...")
+                time.sleep(delay)
+            else:
+                print(f"  ✗ All {retries} attempts failed. Skipping: {url}")
+                return False
+    return False
 
 #####################
 # Helper Functions
@@ -116,7 +156,8 @@ def get_agency_profile_data(driver, agency_url):
     if not agency_url:
         return {}
     try:
-        driver.get(agency_url)
+        if not load_url_with_retry(driver, agency_url):
+            return {}
         time.sleep(2)
         soup = BeautifulSoup(driver.page_source, "html.parser")
         data = {}
@@ -161,10 +202,8 @@ while page <= MAX_PAGES:
     url = BASE_URL.format(page)
     print(f"\nScraping page {page}/{MAX_PAGES} → {url}")
 
-    try:
-        driver.get(url)
-    except Exception as e:
-        print(f"Failed to load page {page}: {e}")
+    if not load_url_with_retry(driver, url):
+        print(f"Failed to load page {page} after all retries. Stopping.")
         break
 
     time.sleep(3)
@@ -185,10 +224,8 @@ while page <= MAX_PAGES:
         if "/new-projects/" in link:
             continue
 
-        try:
-            driver.get(link)
-        except Exception as e:
-            print(f"Failed to load listing: {e}")
+        if not load_url_with_retry(driver, link):
+            print(f"Failed to load listing after all retries. Skipping.")
             continue
 
         time.sleep(2)
@@ -240,9 +277,7 @@ while page <= MAX_PAGES:
                 phone_number = agency_data['phone_number']
             if agency_data.get('email') and not email:
                 email = agency_data['email']
-            try:
-                driver.get(link)
-            except:
+            if not load_url_with_retry(driver, link):
                 pass
             time.sleep(1)
         else:
