@@ -5,103 +5,107 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Zameen Intel · B2B Lead Intelligence</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg:      #06080b;
-      --surf:    #0c1118;
-      --surf2:   #111820;
-      --surf3:   #162030;
-      --border:  #18263a;
-      --border2: #1e3048;
-      --accent:  #00e5a0;
-      --accent2: #00b87d;
-      --blue:    #2d9cff;
-      --blue2:   #0078e0;
-      --orange:  #ff6b35;
-      --yellow:  #f5c518;
-      --red:     #ff4560;
-      --purple:  #9b6dff;
-      --text:    #dce9f5;
-      --text2:   #5e7a93;
+      --bg:      #080c10;
+      --surf:    #0d1520;
+      --surf2:   #111d2c;
+      --surf3:   #162438;
+      --border:  #1a2d42;
+      --border2: #213a56;
+      --accent:  #00d4ff;
+      --accent2: #0099bb;
+      --green:   #00e5a0;
+      --orange:  #ff7c3c;
+      --yellow:  #ffc63d;
+      --red:     #ff4d6a;
+      --purple:  #b06eff;
+      --text:    #e4eef8;
+      --text2:   #607b96;
       --text3:   #2d4258;
-      --mono:    "JetBrains Mono", monospace;
-      --sans:    "Syne", sans-serif;
+      --mono:    "Space Mono", monospace;
+      --sans:    "Outfit", sans-serif;
       --r:       6px;
       --rl:      10px;
+      --sidebar: 240px;
     }
     html, body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 13px; line-height: 1.55; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: var(--surf); }
-    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
-    body::before { content:""; position:fixed; inset:0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,229,160,0.008) 3px, rgba(0,229,160,0.008) 6px); pointer-events:none; z-index:9999; }
-    @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.25;} }
-    @keyframes shimmer { from{background-position:-600px 0} to{background-position:600px 0} }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .skel { background: linear-gradient(90deg, var(--surf) 25%, var(--surf2) 50%, var(--surf) 75%); background-size:800px 100%; animation: shimmer 1.4s infinite; border-radius: var(--r); }
-    .fade { animation: fadeUp 0.3s ease both; }
-    .stagger-1 { animation-delay: .05s; }
-    .stagger-2 { animation-delay: .1s; }
-    .stagger-3 { animation-delay: .15s; }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent2); }
+    body::before { content:""; position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,212,255,.005) 2px,rgba(0,212,255,.005) 4px); pointer-events:none; z-index:9999; }
+
+    @keyframes fadeUp  { from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);} }
+    @keyframes pulse   { 0%,100%{opacity:1;}50%{opacity:.2;} }
+    @keyframes shimmer { from{background-position:-800px 0}to{background-position:800px 0} }
+
+    .skel { background:linear-gradient(90deg,var(--surf) 25%,var(--surf2) 50%,var(--surf) 75%);background-size:800px 100%;animation:shimmer 1.4s infinite;border-radius:var(--r); }
+    .fade { animation:fadeUp .35s ease both; }
+    .d1{animation-delay:.04s} .d2{animation-delay:.08s} .d3{animation-delay:.12s}
+    .d4{animation-delay:.16s} .d5{animation-delay:.20s} .d6{animation-delay:.24s}
 
     /* ── Layout ── */
     #app { display:flex; min-height:100vh; }
-    .sidebar { width:220px; min-width:220px; background:var(--surf); border-right:1px solid var(--border); display:flex; flex-direction:column; padding:0; position:sticky; top:0; height:100vh; overflow-y:auto; }
-    .main { flex:1; min-width:0; padding:28px 32px 48px; }
+    .sidebar { width:var(--sidebar); min-width:var(--sidebar); background:var(--surf); border-right:1px solid var(--border); display:flex; flex-direction:column; position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .main { flex:1; min-width:0; padding:28px 34px 56px; }
 
     /* ── Sidebar ── */
-    .brand { padding:22px 20px 20px; border-bottom:1px solid var(--border); }
-    .brand-eyebrow { font-family:var(--mono); font-size:8px; color:var(--accent); letter-spacing:4px; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
-    .live-dot { display:inline-block; width:6px; height:6px; background:var(--accent); border-radius:50%; animation: pulse 2s infinite; }
-    .brand-name { font-size:20px; font-weight:800; line-height:1.1; letter-spacing:-.5px; }
-    .brand-sub { font-family:var(--mono); font-size:9px; color:var(--text3); margin-top:4px; }
-    .nav-section { padding:16px 12px 6px; }
-    .nav-section-label { font-family:var(--mono); font-size:8px; color:var(--text3); letter-spacing:3px; padding:0 8px; margin-bottom:4px; }
-    .nav-link { display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:var(--r); color:var(--text2); text-decoration:none; font-weight:600; font-size:12px; cursor:pointer; border:none; background:none; width:100%; text-align:left; transition:all .15s; border-left:2px solid transparent; }
-    .nav-link:hover { color:var(--text); background:rgba(255,255,255,.035); }
-    .nav-link.active { color:var(--accent); background:rgba(0,229,160,.07); border-left-color:var(--accent); }
-    .nav-icon { font-size:14px; width:16px; text-align:center; flex-shrink:0; }
-    .sidebar-footer { margin-top:auto; padding:14px 20px; border-top:1px solid var(--border); }
-    .sf-row { font-family:var(--mono); font-size:8px; color:var(--text3); line-height:2; }
-    .sf-stat { display:flex; justify-content:space-between; align-items:center; margin-top:8px; }
-    .sf-stat-label { font-family:var(--mono); font-size:8px; color:var(--text3); }
-    .sf-stat-val { font-family:var(--mono); font-size:10px; color:var(--accent); font-weight:600; }
+    .brand { padding:24px 20px 20px; border-bottom:1px solid var(--border); }
+    .brand-eyebrow { font-family:var(--mono); font-size:8px; color:var(--accent); letter-spacing:3px; margin-bottom:10px; display:flex; align-items:center; gap:7px; }
+    .live-dot { display:inline-block; width:6px; height:6px; background:var(--accent); border-radius:50%; animation:pulse 2.2s infinite; box-shadow:0 0 6px var(--accent); }
+    .brand-logo { font-family:var(--sans); font-size:22px; font-weight:800; letter-spacing:-1px; line-height:1; margin-bottom:4px; }
+    .brand-logo span { color:var(--accent); }
+    .brand-sub { font-family:var(--mono); font-size:8px; color:var(--text3); letter-spacing:1px; }
+    .nav-section { padding:16px 12px 4px; }
+    .nav-label { font-family:var(--mono); font-size:7px; color:var(--text3); letter-spacing:3px; padding:0 8px; margin-bottom:4px; }
+    .nav-link { display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:var(--r); color:var(--text2); text-decoration:none; font-size:13px; font-weight:500; cursor:pointer; border:none; background:none; width:100%; text-align:left; transition:all .15s; border-left:2px solid transparent; }
+    .nav-link:hover { color:var(--text); background:rgba(255,255,255,.03); }
+    .nav-link.active { color:var(--accent); background:rgba(0,212,255,.06); border-left-color:var(--accent); }
+    .nav-icon { font-size:14px; width:18px; text-align:center; flex-shrink:0; }
+    .sidebar-footer { margin-top:auto; padding:14px 18px; border-top:1px solid var(--border); background:rgba(0,0,0,.15); }
+    .sf-line { font-family:var(--mono); font-size:8px; color:var(--text3); line-height:1.8; }
+    .sf-kv { display:flex; justify-content:space-between; margin-top:7px; }
+    .sf-k { font-family:var(--mono); font-size:8px; color:var(--text3); }
+    .sf-v { font-family:var(--mono); font-size:10px; color:var(--accent); font-weight:700; }
 
-    /* ── Page header ── */
-    .page-eyebrow { font-family:var(--mono); font-size:8px; color:var(--accent); letter-spacing:4px; margin-bottom:6px; }
-    .page-title { font-size:24px; font-weight:800; margin-bottom:3px; letter-spacing:-.3px; }
-    .page-sub { color:var(--text2); font-size:11px; margin-bottom:24px; font-family:var(--mono); }
-    .page-header-row { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:24px; }
-    .page-header-meta { text-align:right; font-family:var(--mono); font-size:9px; color:var(--text3); line-height:1.8; }
+    /* ── Page ── */
+    .pg-eyebrow { font-family:var(--mono); font-size:8px; color:var(--accent); letter-spacing:4px; margin-bottom:5px; }
+    .pg-title { font-size:26px; font-weight:800; letter-spacing:-.5px; margin-bottom:2px; }
+    .pg-sub { color:var(--text2); font-size:12px; margin-bottom:26px; }
+    .pg-hdr { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:26px; }
+    .pg-hdr-meta { text-align:right; font-family:var(--mono); font-size:9px; color:var(--text3); line-height:1.9; }
 
-    /* ── Stat cards ── */
-    .stats-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; margin-bottom:22px; }
-    .stat-card { background:var(--surf); border:1px solid var(--border); border-radius:var(--rl); padding:16px 18px; position:relative; overflow:hidden; }
-    .stat-accent-bar { position:absolute; top:0; left:0; right:0; height:2px; }
-    .stat-label { font-family:var(--mono); font-size:8px; color:var(--text3); letter-spacing:2px; margin-bottom:8px; }
-    .stat-value { font-family:var(--mono); font-size:24px; font-weight:700; line-height:1; letter-spacing:-1px; }
-    .stat-unit { font-size:10px; color:var(--text2); margin-left:2px; font-weight:400; letter-spacing:0; }
-    .stat-delta { font-family:var(--mono); font-size:9px; margin-top:6px; color:var(--text3); }
+    /* ── KPI Grid ── */
+    .kpi-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; margin-bottom:22px; }
+    .kpi-card { background:var(--surf); border:1px solid var(--border); border-radius:var(--rl); padding:18px 18px 14px; position:relative; overflow:hidden; transition:border-color .2s, transform .2s; }
+    .kpi-card:hover { border-color:var(--border2); transform:translateY(-1px); }
+    .kpi-bar { position:absolute; top:0; left:0; right:0; height:2px; }
+    .kpi-label { font-family:var(--mono); font-size:8px; color:var(--text3); letter-spacing:2px; margin-bottom:10px; }
+    .kpi-val { font-size:26px; font-weight:800; line-height:1; letter-spacing:-1px; }
+    .kpi-unit { font-size:11px; color:var(--text2); margin-left:2px; font-weight:400; letter-spacing:0; }
+    .kpi-note { font-family:var(--mono); font-size:8px; color:var(--text3); margin-top:7px; }
 
-    /* ── Panels ── */
+    /* ── Panel ── */
     .panel { background:var(--surf); border:1px solid var(--border); border-radius:var(--rl); padding:20px; }
-    .panel-eyebrow { font-family:var(--mono); font-size:8px; color:var(--text3); letter-spacing:2px; margin-bottom:3px; }
-    .panel-title { font-weight:700; font-size:13px; margin-bottom:16px; }
-    .two-col { display:grid; grid-template-columns:1fr 290px; gap:16px; margin-bottom:16px; }
-    .two-equal { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
-    .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:16px; }
+    .panel-eyebrow { font-family:var(--mono); font-size:7px; color:var(--text3); letter-spacing:2px; margin-bottom:2px; }
+    .panel-title { font-weight:700; font-size:13px; margin-bottom:14px; }
+    .g2  { display:grid; grid-template-columns:1fr 280px; gap:14px; margin-bottom:14px; }
+    .g2eq{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+    .g3  { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-bottom:14px; }
+    .g4  { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:14px; margin-bottom:14px; }
 
     /* ── Table ── */
-    .table-wrap { background:var(--surf); border:1px solid var(--border); border-radius:var(--rl); overflow:hidden; margin-bottom:16px; }
-    .table-head { padding:14px 18px 12px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; background:var(--surf2); }
+    .tbl-wrap { background:var(--surf); border:1px solid var(--border); border-radius:var(--rl); overflow:hidden; margin-bottom:14px; }
+    .tbl-hdr { padding:14px 18px 12px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; background:var(--surf2); }
     table { width:100%; border-collapse:collapse; }
     thead tr { background:var(--surf2); }
     th { padding:8px 14px; text-align:left; font-family:var(--mono); font-size:8px; color:var(--text3); letter-spacing:2px; font-weight:500; white-space:nowrap; }
-    td { padding:10px 14px; border-bottom:1px solid var(--border); font-size:11px; vertical-align:middle; }
+    td { padding:10px 14px; border-bottom:1px solid var(--border); font-size:12px; vertical-align:middle; }
     tbody tr:last-child td { border-bottom:none; }
-    tbody tr:hover td { background:rgba(255,255,255,.018); }
+    tbody tr:hover td { background:rgba(0,212,255,.02); }
 
     /* ── Score bar ── */
     .score-bar-wrap { display:flex; align-items:center; gap:7px; }
@@ -110,195 +114,187 @@
 
     /* ── Badge ── */
     .badge { display:inline-flex; align-items:center; border-radius:4px; padding:2px 7px; font-size:9px; font-weight:700; font-family:var(--mono); white-space:nowrap; }
-    .badge-dot { width:5px; height:5px; border-radius:50%; margin-right:5px; flex-shrink:0; }
+    .badge-verified { background:rgba(0,229,160,.12); color:var(--green); border:1px solid rgba(0,229,160,.3); }
 
     /* ── Filter bar ── */
-    .filter-bar { background:var(--surf); border:1px solid var(--border); border-radius:var(--rl); padding:14px 16px; margin-bottom:16px; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; }
-    .filter-group label { display:block; font-family:var(--mono); font-size:8px; color:var(--text3); letter-spacing:1.5px; margin-bottom:4px; }
-    select, input[type=text], input[type=number] { background:var(--surf2); border:1px solid var(--border2); border-radius:var(--r); padding:6px 10px; color:var(--text); font-family:var(--mono); font-size:11px; outline:none; transition:border-color .15s; }
-    select:focus, input:focus { border-color:rgba(0,229,160,.45); box-shadow:0 0 0 2px rgba(0,229,160,.08); }
-    .filter-reset { background:transparent; border:1px solid var(--border2); border-radius:var(--r); padding:6px 12px; color:var(--text3); font-family:var(--mono); font-size:9px; cursor:pointer; transition:all .15s; align-self:flex-end; }
-    .filter-reset:hover { border-color:var(--red); color:var(--red); }
+    .filter-bar { background:var(--surf); border:1px solid var(--border); border-radius:var(--rl); padding:16px 18px; margin-bottom:14px; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; }
+    .fg label { display:block; font-family:var(--mono); font-size:7px; color:var(--text3); letter-spacing:2px; margin-bottom:5px; }
+    select, input[type=text], input[type=number] { background:var(--surf2); border:1px solid var(--border2); border-radius:var(--r); padding:7px 10px; color:var(--text); font-family:var(--mono); font-size:11px; outline:none; transition:border-color .15s, box-shadow .15s; }
+    select:focus, input:focus { border-color:rgba(0,212,255,.45); box-shadow:0 0 0 2px rgba(0,212,255,.07); }
+    .btn-reset { background:transparent; border:1px solid var(--border2); border-radius:var(--r); padding:7px 13px; color:var(--text3); font-family:var(--mono); font-size:9px; cursor:pointer; transition:all .15s; align-self:flex-end; }
+    .btn-reset:hover { border-color:var(--red); color:var(--red); }
+    .filter-count { font-family:var(--mono); font-size:10px; color:var(--text2); align-self:flex-end; padding-bottom:7px; margin-left:auto; }
 
-    /* ── Lead cards ── */
+    /* ── Lead card ── */
     .lead-card { background:var(--surf); border:1px solid var(--border); border-radius:var(--rl); margin-bottom:8px; overflow:hidden; border-left:3px solid transparent; transition:border-color .2s, box-shadow .2s; }
-    .lead-card:hover { box-shadow:0 4px 24px rgba(0,0,0,.4); }
-    .lead-card-header { padding:14px 16px; display:flex; justify-content:space-between; align-items:flex-start; gap:12px; cursor:pointer; }
-    .lead-title { font-weight:700; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px; }
-    .lead-meta-row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:3px; }
-    .lead-meta-chip { font-family:var(--mono); font-size:10px; color:var(--text2); display:flex; align-items:center; gap:3px; }
-    .lead-meta-sep { color:var(--text3); }
-    .lead-location { font-size:10px; color:var(--text3); font-family:var(--mono); margin-top:2px; display:flex; align-items:center; gap:4px; }
-    .lead-score-block { text-align:right; flex-shrink:0; min-width:56px; }
-    .lead-score-num { font-family:var(--mono); font-size:26px; font-weight:700; line-height:1; }
-    .lead-score-lbl { font-family:var(--mono); font-size:7px; color:var(--text3); letter-spacing:2px; margin-top:2px; }
+    .lead-card:hover { box-shadow:0 6px 28px rgba(0,0,0,.5); }
+    .lead-hdr { padding:14px 18px; display:flex; justify-content:space-between; align-items:flex-start; gap:14px; cursor:pointer; user-select:none; }
+    .lead-title { font-weight:700; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:5px; max-width:500px; }
+    .lead-chips { display:flex; gap:7px; align-items:center; flex-wrap:wrap; margin-bottom:4px; }
+    .chip { font-family:var(--mono); font-size:10px; color:var(--text2); }
+    .chip-sep { color:var(--text3); }
+    .lead-loc { font-size:11px; color:var(--text3); font-family:var(--mono); margin-top:2px; display:flex; align-items:center; gap:5px; flex-wrap:wrap; }
+    .lead-right { display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex-shrink:0; }
+    .score-big { text-align:right; }
+    .score-big-num { font-family:var(--mono); font-size:28px; font-weight:700; line-height:1; }
+    .score-big-lbl { font-family:var(--mono); font-size:7px; color:var(--text3); letter-spacing:2px; margin-top:2px; }
+    .expand-icon { font-family:var(--mono); font-size:10px; color:var(--text3); margin-top:4px; }
 
     .lead-body { display:none; border-top:1px solid var(--border); }
-    .lead-body-inner { padding:14px 16px; }
-    .lead-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px 16px; margin-bottom:12px; }
-    .lead-field-label { font-family:var(--mono); font-size:8px; color:var(--text3); letter-spacing:1.5px; margin-bottom:3px; }
-    .lead-field-val { font-size:11px; color:var(--text); font-family:var(--mono); word-break:break-word; }
-    .lead-field-val a { color:var(--accent); text-decoration:none; }
-    .lead-field-val a:hover { text-decoration:underline; }
-    .lead-desc { background:var(--surf2); border:1px solid var(--border); border-radius:var(--r); padding:10px 12px; font-size:10px; color:var(--text2); line-height:1.6; margin-bottom:12px; font-family:var(--mono); max-height:80px; overflow:hidden; position:relative; }
-    .lead-desc::after { content:""; position:absolute; bottom:0; left:0; right:0; height:24px; background:linear-gradient(transparent,var(--surf2)); }
-    .lead-actions { display:flex; gap:10px; align-items:center; padding-top:10px; border-top:1px solid var(--border); }
-    .btn-primary { padding:6px 14px; background:rgba(0,229,160,.12); border:1px solid rgba(0,229,160,.3); border-radius:var(--r); color:var(--accent); font-family:var(--mono); font-size:10px; font-weight:600; cursor:pointer; transition:all .15s; text-decoration:none; display:inline-block; }
-    .btn-primary:hover { background:rgba(0,229,160,.2); }
-    .btn-ghost { padding:6px 14px; background:transparent; border:1px solid var(--border2); border-radius:var(--r); color:var(--text2); font-family:var(--mono); font-size:10px; cursor:pointer; transition:all .15s; text-decoration:none; display:inline-block; }
-    .btn-ghost:hover { border-color:var(--text2); color:var(--text); }
+    .lead-body-inner { padding:16px 18px; }
+
+    /* ── Detail sections ── */
+    .ld-section { margin-bottom:16px; }
+    .ld-section-title { font-family:var(--mono); font-size:7px; color:var(--accent); letter-spacing:3px; padding-bottom:8px; border-bottom:1px solid var(--border); margin-bottom:12px; }
+    .ld-grid  { display:grid; grid-template-columns:repeat(4,1fr); gap:10px 16px; }
+    .ld-grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:10px 16px; }
+    .ld-grid2 { display:grid; grid-template-columns:repeat(2,1fr); gap:10px 16px; }
+    .lf-label { font-family:var(--mono); font-size:7px; color:var(--text3); letter-spacing:1.5px; margin-bottom:4px; }
+    .lf-val   { font-size:12px; color:var(--text); word-break:break-word; }
+    .lf-val a { color:var(--accent); text-decoration:none; }
+    .lf-val a:hover { text-decoration:underline; }
+    .lf-val.mono { font-family:var(--mono); }
+
+    .lead-desc { background:var(--surf2); border:1px solid var(--border); border-left:2px solid var(--border2); border-radius:var(--r); padding:12px 14px; font-size:11px; color:var(--text2); line-height:1.7; margin-bottom:14px; max-height:90px; overflow:hidden; position:relative; }
+    .lead-desc::after { content:""; position:absolute; bottom:0; left:0; right:0; height:28px; background:linear-gradient(transparent,var(--surf2)); }
+
+    /* ── Action row ── */
+    .lead-actions { display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding-top:12px; border-top:1px solid var(--border); margin-top:4px; }
+    .cta-label { font-family:var(--mono); font-size:7px; color:var(--text3); letter-spacing:2px; margin-right:4px; }
+    .btn { display:inline-flex; align-items:center; gap:5px; border-radius:var(--r); font-family:var(--mono); font-size:10px; font-weight:700; cursor:pointer; text-decoration:none; transition:all .15s; white-space:nowrap; padding:7px 13px; border:1px solid transparent; }
+    .btn-accent { background:rgba(0,212,255,.1); border-color:rgba(0,212,255,.3); color:var(--accent); }
+    .btn-accent:hover { background:rgba(0,212,255,.18); }
+    .btn-green  { background:rgba(0,229,160,.1); border-color:rgba(0,229,160,.3); color:var(--green); }
+    .btn-green:hover  { background:rgba(0,229,160,.18); }
+    .btn-ghost  { background:transparent; border-color:var(--border2); color:var(--text2); }
+    .btn-ghost:hover  { border-color:var(--text2); color:var(--text); }
 
     /* ── Pagination ── */
-    .pagination { display:flex; gap:5px; justify-content:center; margin-top:18px; align-items:center; }
-    .page-btn { padding:5px 10px; border-radius:var(--r); border:1px solid var(--border2); background:var(--surf2); color:var(--text2); font-family:var(--mono); font-size:10px; cursor:pointer; transition:all .15s; }
-    .page-btn.active { background:var(--accent); color:var(--bg); border-color:var(--accent); font-weight:700; }
-    .page-btn:hover:not(.active) { border-color:var(--border2); color:var(--text); }
-    .page-ellipsis { color:var(--text3); font-family:var(--mono); font-size:10px; padding:0 4px; }
-
-    /* ── Location bars ── */
-    .loc-row { display:flex; align-items:center; gap:10px; padding:6px 0; }
-    .loc-bar-bg { flex:1; height:2px; background:var(--border); border-radius:1px; }
-    .loc-bar-fill { height:100%; background:var(--accent); border-radius:1px; opacity:.6; }
+    .pagination { display:flex; gap:5px; justify-content:center; margin-top:20px; align-items:center; }
+    .pg-btn { padding:5px 11px; border-radius:var(--r); border:1px solid var(--border2); background:var(--surf2); color:var(--text2); font-family:var(--mono); font-size:10px; cursor:pointer; transition:all .15s; }
+    .pg-btn.active { background:var(--accent); color:var(--bg); border-color:var(--accent); font-weight:700; }
+    .pg-btn:hover:not(.active) { color:var(--text); }
+    .pg-ellipsis { color:var(--text3); font-family:var(--mono); font-size:10px; padding:0 4px; }
 
     /* ── Segment card ── */
-    .seg-card { background:var(--surf); border:1px solid var(--border); border-radius:var(--rl); padding:18px; }
-    .seg-card-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--border); }
-    .seg-color-block { width:10px; height:36px; border-radius:3px; flex-shrink:0; }
-    .seg-stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .seg-card { background:var(--surf); border:1px solid var(--border); border-radius:var(--rl); padding:18px; transition:transform .2s; }
+    .seg-card:hover { transform:translateY(-2px); }
+    .seg-hdr { display:flex; align-items:center; gap:12px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+    .seg-swatch { width:8px; height:40px; border-radius:3px; flex-shrink:0; }
+    .seg-stats { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
     .seg-stat { background:var(--surf2); border-radius:var(--r); padding:10px 12px; border:1px solid var(--border); }
-    .seg-stat-label { font-family:var(--mono); font-size:8px; color:var(--text3); letter-spacing:1.5px; margin-bottom:4px; }
+    .seg-stat-label { font-family:var(--mono); font-size:7px; color:var(--text3); letter-spacing:1.5px; margin-bottom:4px; }
     .seg-stat-val { font-family:var(--mono); font-size:16px; font-weight:700; }
 
-    /* ── Empty state ── */
-    .empty-state { text-align:center; padding:60px 20px; color:var(--text3); }
-    .empty-state-icon { font-size:32px; margin-bottom:12px; opacity:.4; }
-    .empty-state-text { font-family:var(--mono); font-size:11px; }
+    /* ── Location bars ── */
+    .loc-row { display:flex; align-items:center; gap:10px; padding:5px 0; }
+    .loc-rank { font-family:var(--mono); font-size:8px; color:var(--text3); min-width:18px; text-align:right; }
+    .loc-bar-bg { flex:1; height:2px; background:var(--border); border-radius:1px; }
+    .loc-bar-fill { height:100%; background:var(--accent); border-radius:1px; opacity:.55; }
 
-    /* ── Info tooltip tag ── */
-    .info-tag { display:inline-flex; align-items:center; gap:4px; font-family:var(--mono); font-size:9px; color:var(--text3); background:var(--surf2); border:1px solid var(--border); border-radius:4px; padding:2px 6px; }
+    /* ── Mini stat ── */
+    .mini-stat { background:var(--surf2); border:1px solid var(--border); border-radius:var(--r); padding:14px 16px; }
+    .mini-stat-label { font-family:var(--mono); font-size:7px; color:var(--text3); letter-spacing:2px; margin-bottom:6px; }
+    .mini-stat-val { font-family:var(--mono); font-size:20px; font-weight:700; }
 
-    /* ── Divider ── */
-    .divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
+    /* ── Empty ── */
+    .empty { text-align:center; padding:60px 20px; color:var(--text3); }
+    .empty-icon { font-size:36px; margin-bottom:14px; opacity:.4; }
+    .empty-text { font-family:var(--mono); font-size:11px; }
 
-    /* ── Responsive ── */
-    @media(max-width:1200px) { .stats-grid { grid-template-columns:repeat(3,1fr); } }
-    @media(max-width:900px) { .two-col { grid-template-columns:1fr; } .lead-grid { grid-template-columns:repeat(2,1fr); } }
+    @media(max-width:1280px) { .kpi-grid{grid-template-columns:repeat(3,1fr);} }
+    @media(max-width:1000px) { .g2{grid-template-columns:1fr;} .ld-grid{grid-template-columns:repeat(2,1fr);} }
+    @media(max-width:800px)  { .g3{grid-template-columns:1fr 1fr;} .lead-title{max-width:280px;} }
   </style>
 </head>
 <body>
 <div id="app">
   <aside class="sidebar">
     <div class="brand">
-      <div class="brand-eyebrow"><span class="live-dot"></span> LIVE INTELLIGENCE</div>
-      <div class="brand-name">ZAMEEN<br>INTEL</div>
-      <div class="brand-sub">Karachi · Real Estate B2B</div>
+      <div class="brand-eyebrow"><span class="live-dot"></span>LIVE INTELLIGENCE</div>
+      <div class="brand-logo">Zameen<span>Intel</span></div>
+      <div class="brand-sub">KARACHI · REAL ESTATE B2B</div>
     </div>
-
     <div class="nav-section">
-      <div class="nav-section-label">OVERVIEW</div>
-      <button class="nav-link active" onclick="showPage('dashboard', this)"><span class="nav-icon">◈</span> Dashboard</button>
-      <button class="nav-link" onclick="showPage('analytics', this)"><span class="nav-icon">◉</span> Analytics</button>
+      <div class="nav-label">OVERVIEW</div>
+      <button class="nav-link active" onclick="showPage('dashboard',this)"><span class="nav-icon">◈</span>Dashboard</button>
+      <button class="nav-link" onclick="showPage('analytics',this)"><span class="nav-icon">◉</span>Analytics</button>
     </div>
-
     <div class="nav-section">
-      <div class="nav-section-label">LEADS</div>
-      <button class="nav-link" onclick="showPage('leads', this)"><span class="nav-icon">⬡</span> All Leads</button>
-      <button class="nav-link" onclick="showPage('segments', this)"><span class="nav-icon">▣</span> Segments</button>
+      <div class="nav-label">LEADS</div>
+      <button class="nav-link" onclick="showPage('leads',this)"><span class="nav-icon">⬡</span>All Leads</button>
+      <button class="nav-link" onclick="showPage('segments',this)"><span class="nav-icon">▣</span>Segments</button>
     </div>
-
     <div class="sidebar-footer">
-      <div class="sf-row">Zameen.com · Karachi Flats</div>
-      <div class="sf-row">Daily scrape + ML scoring</div>
+      <div class="sf-line">Zameen.com · Karachi Flats</div>
+      <div class="sf-line">Daily scrape + ML scoring</div>
       <div id="sb-stats">
-        <div class="sf-stat"><span class="sf-stat-label">TOTAL LEADS</span><span class="sf-stat-val" id="sb-total">—</span></div>
-        <div class="sf-stat"><span class="sf-stat-label">TODAY</span><span class="sf-stat-val" id="sb-today">—</span></div>
+        <div class="sf-kv"><span class="sf-k">TOTAL LEADS</span><span class="sf-v" id="sb-total">—</span></div>
+        <div class="sf-kv"><span class="sf-k">TODAY</span><span class="sf-v" id="sb-today">—</span></div>
+        <div class="sf-kv"><span class="sf-k">AVG SCORE</span><span class="sf-v" id="sb-score">—</span></div>
       </div>
     </div>
   </aside>
 
-  <main class="main" id="main-content"></main>
+  <main class="main" id="main"></main>
 </div>
 
 <script>
-// ── Config ──────────────────────────────────────────────────
+// ── Config ────────────────────────────────────────────────────
 const API = window.location.hostname === 'localhost'
   ? 'http://localhost:8000'
-  : 'https://b2b-lead-intelligence-platform-1.onrender.com';
+  : 'https://b2b-lead-intelligence-platform.onrender.com';
 
-const SEGMENT_COLORS = {
+const SEG_COLOR = {
   "Budget Area":    "#2d9cff",
   "Mid-Value Area": "#00e5a0",
-  "Premium Area":   "#f5c518",
-  "Luxury Area":    "#ff6b35"
+  "Premium Area":   "#ffc63d",
+  "Luxury Area":    "#ff7c3c"
 };
 
-const SEGMENT_DESC = {
-  "Budget Area":    "Entry-level flats · High volume · First-time buyers",
-  "Mid-Value Area": "Mid-range inventory · Strong demand · Growing areas",
-  "Premium Area":   "Quality listings · DHA/Clifton · High-intent buyers",
-  "Luxury Area":    "Ultra-premium · Low inventory · HNW clientele"
+const SEG_DESC = {
+  "Budget Area":    "Entry-level · High volume · Value seekers",
+  "Mid-Value Area": "Mid-range · Growing areas · Solid demand",
+  "Premium Area":   "Quality stock · DHA/Clifton · High intent",
+  "Luxury Area":    "Ultra-premium · Low inventory · HNW clients"
 };
 
-// ── Utilities ───────────────────────────────────────────────
-function fmt(n) {
+// ── Helpers ───────────────────────────────────────────────────
+const fmt = n => {
   if (n == null || n === "" || isNaN(n)) return "–";
   n = Number(n);
   if (n >= 10_000_000) return (n/10_000_000).toFixed(1) + " Cr";
-  if (n >= 100_000)    return (n/100_000).toFixed(1)    + " L";
+  if (n >= 100_000)    return (n/100_000).toFixed(1) + " L";
   return n.toLocaleString();
-}
-
-function fmtPsf(n) {
-  if (!n || isNaN(n)) return "–";
-  return "₨" + Number(n).toLocaleString(undefined, {maximumFractionDigits:0}) + "/sqft";
-}
-
-function fmtArea(n) {
-  if (!n || isNaN(n)) return "–";
-  return Number(n).toLocaleString(undefined, {maximumFractionDigits:0}) + " sqft";
-}
-
-function fmtNum(n, dec=1) {
-  if (n == null || isNaN(n)) return "–";
-  return Number(n).toFixed(dec);
-}
-
-function scoreColor(s) {
-  return s >= 70 ? "var(--accent)" : s >= 40 ? "var(--yellow)" : "var(--red)";
-}
-
-function scoreLabel(s) {
-  return s >= 70 ? "HIGH" : s >= 40 ? "MED" : "LOW";
-}
-
-function sanitize(str) {
+};
+const fmtPsf  = n => (!n || isNaN(n)) ? "–" : "₨" + Number(n).toLocaleString(undefined,{maximumFractionDigits:0}) + "/sqft";
+const fmtArea = n => (!n || isNaN(n)) ? "–" : Number(n).toLocaleString(undefined,{maximumFractionDigits:0}) + " sqft";
+const fmtN    = (n,d=1) => (n==null||isNaN(n)) ? "–" : Number(n).toFixed(d);
+const scoreColor = s => s >= 70 ? "var(--green)" : s >= 40 ? "var(--yellow)" : "var(--red)";
+const scoreLabel = s => s >= 70 ? "HIGH" : s >= 40 ? "MED" : "LOW";
+const numStr = s => s ? (String(s).replace(/[^0-9.]/g,'') || "–") : "–";
+const san = str => {
   if (!str) return "–";
   const d = document.createElement('div');
   d.textContent = str;
   return d.innerHTML;
-}
+};
 
-async function get(path) {
+async function apiGet(path) {
   try {
     const r = await fetch(API + path);
     if (!r.ok) throw new Error(r.statusText);
     return r.json();
   } catch(e) {
-    console.error('API error:', path, e);
+    console.error('API error:', path, e.message);
     return {};
   }
 }
 
-// ── State ────────────────────────────────────────────────────
+// ── State ─────────────────────────────────────────────────────
 let state = {
   page: "dashboard",
-  leadsFilters: {
-    page: 1, limit: 20,
-    sort_by: "lead_score",
-    segment: "", min_score: "",
-    location: "", bedrooms: "",
-    min_price: "", max_price: ""
-  }
+  f: { page:1, limit:20, sort_by:"lead_score", segment:"", min_score:"", location:"", bedrooms:"", min_price:"", max_price:"" }
 };
 
 function showPage(name, btn) {
@@ -308,562 +304,651 @@ function showPage(name, btn) {
   render();
 }
 
-// ── Sidebar stats ────────────────────────────────────────────
-async function loadSidebarStats() {
-  const s = await get('/api/summary');
-  const t = document.getElementById('sb-total');
-  const d = document.getElementById('sb-today');
-  if (t) t.textContent = (s.total_leads ?? "–").toLocaleString?.() || s.total_leads || "–";
-  if (d) d.textContent = s.today_leads ?? "–";
+function showPageFiltered(segment) {
+  state.f.segment = segment;
+  state.f.page = 1;
+  showPage('leads', document.querySelectorAll('.nav-link')[2]);
 }
 
-// ── Dashboard ────────────────────────────────────────────────
+// ── Sidebar stats ─────────────────────────────────────────────
+async function loadSidebarStats() {
+  const s = await apiGet('/api/summary');
+  const set = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
+  set('sb-total', s.total_leads != null ? Number(s.total_leads).toLocaleString() : "–");
+  set('sb-today', s.today_leads ?? "–");
+  set('sb-score', s.avg_lead_score != null ? fmtN(s.avg_lead_score,1) : "–");
+}
+
+// ── SVG bar chart ─────────────────────────────────────────────
+function svgBars(id, data, key, labelFn, colorFn, valFn, W=360, H=165) {
+  const el = document.getElementById(id);
+  if (!el || !data?.length) return;
+  const valid = data.filter(d => d[key] != null && !isNaN(d[key]));
+  if (!valid.length) return;
+  const PAD=32, max=Math.max(...valid.map(d=>+d[key]),1);
+  const bw = (W-PAD*2)/valid.length;
+  const bars = valid.map((d,i) => {
+    const val=+d[key], bh=Math.max((val/max)*(H-52),2);
+    const x=PAD+i*bw+bw*.12, y=H-bh-24, c=colorFn(d), lbl=labelFn(d);
+    return `<rect x="${x}" y="${y}" width="${bw*.76}" height="${bh}" rx="2" fill="${c}" opacity=".8"/>
+            <text x="${x+bw*.38}" y="${H-5}" text-anchor="middle" font-size="8" fill="var(--text3)" font-family="Space Mono">${lbl}</text>
+            <text x="${x+bw*.38}" y="${y-5}" text-anchor="middle" font-size="8" fill="${c}" font-family="Space Mono">${valFn(val)}</text>`;
+  }).join('');
+  el.className = 'fade';
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:100%">${bars}</svg>`;
+}
+
+// ── Segment donut ─────────────────────────────────────────────
+function renderDonut(id, segsObj) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const segs = Object.entries(segsObj);
+  const total = segs.reduce((a,[,v])=>a+v,0)||1;
+  let cum = 0;
+  const R=50, cx=68, cy=68;
+  const paths = segs.map(([name,val]) => {
+    const pct=val/total, start=cum*2*Math.PI-Math.PI/2;
+    cum += pct;
+    const end=cum*2*Math.PI-Math.PI/2;
+    const x1=cx+R*Math.cos(start), y1=cy+R*Math.sin(start);
+    const x2=cx+R*Math.cos(end),   y2=cy+R*Math.sin(end);
+    return `<path d="M${cx},${cy} L${x1},${y1} A${R},${R} 0 ${pct>.5?1:0},1 ${x2},${y2} Z" fill="${SEG_COLOR[name]||'#888'}" opacity=".85"/>`;
+  }).join('');
+  const legend = segs.map(([name,val]) => `
+    <div style="display:flex;align-items:center;gap:7px;margin-bottom:5px">
+      <div style="width:7px;height:7px;border-radius:2px;background:${SEG_COLOR[name]||'#888'};flex-shrink:0"></div>
+      <span style="font-size:11px;color:var(--text2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${name}</span>
+      <span style="font-family:var(--mono);font-size:10px;color:var(--text)">${val}</span>
+      <span style="font-family:var(--mono);font-size:9px;color:var(--text3)">${((val/total)*100).toFixed(0)}%</span>
+    </div>`).join('');
+  el.className = 'fade';
+  el.innerHTML = `<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+    <svg viewBox="0 0 136 136" style="width:120px;height:120px;flex-shrink:0">
+      ${paths}
+      <circle cx="${cx}" cy="${cy}" r="24" fill="var(--surf)"/>
+      <text x="${cx}" y="${cy+4}" text-anchor="middle" font-size="12" fill="var(--text2)" font-family="Space Mono">${total}</text>
+    </svg>
+    <div style="flex:1;min-width:130px">${legend}</div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════════════════════════
 async function renderDashboard() {
-  const el = document.getElementById('main-content');
+  const el = document.getElementById('main');
   const now = new Date().toLocaleString('en-US',{dateStyle:'medium',timeStyle:'short'});
   el.innerHTML = `
-    <div class="page-header-row">
+    <div class="pg-hdr">
       <div>
-        <div class="page-eyebrow">KARACHI REAL ESTATE · LIVE INTELLIGENCE</div>
-        <div class="page-title">Lead Dashboard</div>
-        <div class="page-sub">Automated scraping · ML scoring · Market segmentation</div>
+        <div class="pg-eyebrow">KARACHI REAL ESTATE · LIVE INTELLIGENCE</div>
+        <div class="pg-title">Lead Dashboard</div>
+        <div class="pg-sub">Automated scraping · ML scoring · Market segmentation</div>
       </div>
-      <div class="page-header-meta">
-        Last refresh<br>${now}<br>
-        <span style="color:var(--accent);font-size:8px">● DATA LIVE</span>
-      </div>
+      <div class="pg-hdr-meta">Refreshed<br>${now}<br><span style="color:var(--accent)">● DATA LIVE</span></div>
     </div>
 
-    <div class="stats-grid" id="stats-grid">
-      ${[...Array(6)].map(()=>`<div class="stat-card"><div class="skel" style="height:10px;width:70px;margin-bottom:10px"></div><div class="skel" style="height:30px;width:90px"></div></div>`).join('')}
+    <div class="kpi-grid" id="kpi-grid">
+      ${[...Array(6)].map(()=>`<div class="kpi-card"><div class="skel" style="height:10px;width:70px;margin-bottom:10px"></div><div class="skel" style="height:28px;width:80px"></div></div>`).join('')}
     </div>
 
-    <div class="two-col" style="margin-bottom:16px">
+    <div class="g2" style="margin-bottom:14px">
       <div class="panel">
-        <div class="panel-eyebrow">WEEKLY TREND</div>
+        <div class="panel-eyebrow">7-DAY TREND</div>
         <div class="panel-title">Daily Lead Volume</div>
         <div id="trend-chart" style="height:170px" class="skel"></div>
       </div>
       <div class="panel">
         <div class="panel-eyebrow">MARKET SPLIT</div>
         <div class="panel-title">Segment Distribution</div>
-        <div id="seg-chart"><div class="skel" style="height:150px"></div></div>
+        <div id="donut-chart"><div class="skel" style="height:140px"></div></div>
       </div>
     </div>
 
-    <div class="table-wrap">
-      <div class="table-head">
-        <div>
-          <div class="panel-eyebrow">TOP RANKED</div>
-          <div style="font-weight:700;font-size:13px">Highest-Scored Leads</div>
-        </div>
-        <button class="btn-ghost" style="font-size:10px" onclick="showPage('leads',document.querySelectorAll('.nav-link')[3])">View all leads →</button>
+    <div class="tbl-wrap">
+      <div class="tbl-hdr">
+        <div><div class="panel-eyebrow">TOP RANKED</div><div style="font-weight:700;font-size:13px">Highest-Scored Leads</div></div>
+        <button class="btn btn-ghost" onclick="showPage('leads',document.querySelectorAll('.nav-link')[2])">View all leads →</button>
       </div>
-      <div id="top-table">
+      <div id="top-tbl">
         <table><thead><tr>
-          <th>PROPERTY</th><th>PRICE</th><th>AREA</th><th>BEDS / BATHS</th><th>₨/SQFT</th><th>SEGMENT</th><th>SCORE</th><th>POSTED</th><th>LINK</th>
+          <th>PROPERTY</th><th>AGENT / AGENCY</th><th>PRICE</th><th>AREA</th><th>BEDS/BATHS</th><th>₨/SQFT</th><th>SEGMENT</th><th>SCORE</th><th>CONTACT</th><th>LINK</th>
         </tr></thead><tbody>
-          ${[...Array(8)].map(()=>`<tr>${[...Array(9)].map(()=>`<td><div class="skel" style="height:12px;width:88%"></div></td>`).join('')}</tr>`).join('')}
+          ${[...Array(8)].map(()=>`<tr>${[...Array(10)].map(()=>`<td><div class="skel" style="height:11px;width:85%"></div></td>`).join('')}</tr>`).join('')}
         </tbody></table>
       </div>
     </div>`;
 
   const [summary, trends, top] = await Promise.all([
-    get('/api/summary'),
-    get('/api/trends/weekly'),
-    get('/api/leads/top?limit=10')
+    apiGet('/api/summary'),
+    apiGet('/api/trends/weekly'),
+    apiGet('/api/leads/top?limit=12')
   ]);
 
-  // ── Stats cards
   const segsObj = summary.segments || {};
-  const segTotal = Object.values(segsObj).reduce((a,v)=>a+v,0);
-  const luxCount = segsObj["Luxury Area"] || 0;
-  const premCount = segsObj["Premium Area"] || 0;
+  const verPct = summary.total_leads > 0 ? Math.round((summary.verified_agencies/summary.total_leads)*100) : 0;
 
   const cards = [
-    { label:"TOTAL LEADS",       value: (summary.total_leads ?? "–").toLocaleString?.() || summary.total_leads || "–", unit:"", color:"var(--accent)", delta:"All-time scraped" },
-    { label:"TODAY'S LISTINGS",  value: summary.today_leads ?? "–",   unit:"",    color:"var(--blue)",   delta:"Scraped today" },
-    { label:"AVG LEAD SCORE",    value: fmtNum(summary.avg_lead_score,1), unit:"/100", color:"var(--yellow)", delta:"ML-computed quality" },
-    { label:"AVG PRICE",         value: fmt(summary.avg_price),        unit:"",    color:"var(--orange)", delta:"Across all segments" },
-    { label:"AVG ₨/SQFT",        value: fmtPsf(summary.avg_price_per_sqft || null), unit:"", color:"var(--purple)", delta:"Price density" },
-    { label:"VERIFIED AGENCIES", value: summary.verified_agencies ?? "–", unit:"", color:"#22c55e",      delta:"Zameen verified" },
+    { label:"TOTAL LEADS",       val: summary.total_leads != null ? Number(summary.total_leads).toLocaleString() : "–", unit:"",     color:"var(--accent)",  note:"All-time scraped" },
+    { label:"TODAY'S LISTINGS",  val: summary.today_leads ?? "–",                                                        unit:"",     color:"var(--green)",   note:"Scraped today" },
+    { label:"AVG LEAD SCORE",    val: fmtN(summary.avg_lead_score,1),                                                    unit:"/100", color:"var(--yellow)",  note:"ML-computed quality" },
+    { label:"AVG PRICE",         val: fmt(summary.avg_price),                                                            unit:"",     color:"var(--orange)",  note:"Across all segments" },
+    { label:"AVG ₨/SQFT",        val: summary.avg_price_per_sqft ? "₨"+Number(summary.avg_price_per_sqft).toLocaleString(undefined,{maximumFractionDigits:0}) : "–", unit:"", color:"var(--purple)", note:"Price density" },
+    { label:"VERIFIED AGENCIES", val: summary.verified_agencies ?? "–",                                                  unit:"",     color:"var(--green)",   note:`${verPct}% of all leads` },
   ];
 
-  document.getElementById('stats-grid').innerHTML = cards.map((c,i) => `
-    <div class="stat-card fade stagger-${Math.min(i+1,3)}">
-      <div class="stat-accent-bar" style="background:${c.color};opacity:.75"></div>
-      <div class="stat-label">${c.label}</div>
-      <div class="stat-value" style="color:${c.color}">${c.value}<span class="stat-unit">${c.unit}</span></div>
-      <div class="stat-delta">${c.delta}</div>
+  document.getElementById('kpi-grid').innerHTML = cards.map((c,i) => `
+    <div class="kpi-card fade d${Math.min(i+1,6)}">
+      <div class="kpi-bar" style="background:${c.color};opacity:.7"></div>
+      <div class="kpi-label">${c.label}</div>
+      <div class="kpi-val" style="color:${c.color}">${c.val}<span class="kpi-unit">${c.unit}</span></div>
+      <div class="kpi-note">${c.note}</div>
     </div>`).join('');
 
-  // ── Trend chart
-  const days = trends.days || [], counts = trends.counts || [];
+  // Trend bars
+  const days=trends.days||[], counts=trends.counts||[];
   if (days.length) {
-    const maxC = Math.max(...counts, 1);
-    const W=500, H=155, PAD=28;
-    const bw = (W - PAD*2) / days.length;
+    const maxC=Math.max(...counts,1), W=500, H=155, PAD=28;
+    const bw=(W-PAD*2)/days.length;
     const bars = days.map((d,i) => {
-      const bh = Math.max((counts[i]/maxC)*(H-45), 2);
-      const x = PAD + i*bw + bw*0.12;
-      const y = H - bh - 22;
-      const isMax = counts[i] === Math.max(...counts);
-      return `<rect x="${x}" y="${y}" width="${bw*0.76}" height="${bh}" rx="2" fill="var(--accent)" opacity="${isMax?'0.9':'0.55'}"/>
-              <text x="${x+bw*0.38}" y="${H-5}" text-anchor="middle" font-size="8" fill="var(--text3)" font-family="JetBrains Mono">${d.slice(5)}</text>
-              <text x="${x+bw*0.38}" y="${y-5}" text-anchor="middle" font-size="8" fill="${isMax?'var(--accent)':'var(--text2)'}" font-family="JetBrains Mono">${counts[i]}</text>`;
+      const bh=Math.max((counts[i]/maxC)*(H-45),2), x=PAD+i*bw+bw*.12, y=H-bh-22;
+      const isMax = counts[i]===Math.max(...counts);
+      return `<rect x="${x}" y="${y}" width="${bw*.76}" height="${bh}" rx="2" fill="var(--accent)" opacity="${isMax?.9:.5}"/>
+              <text x="${x+bw*.38}" y="${H-5}" text-anchor="middle" font-size="8" fill="var(--text3)" font-family="Space Mono">${d.slice(5)}</text>
+              <text x="${x+bw*.38}" y="${y-5}" text-anchor="middle" font-size="8" fill="${isMax?'var(--accent)':'var(--text2)'}" font-family="Space Mono">${counts[i]}</text>`;
     }).join('');
-    document.getElementById('trend-chart').className = 'fade';
-    document.getElementById('trend-chart').innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:100%">${bars}</svg>`;
+    const tc = document.getElementById('trend-chart');
+    tc.className='fade';
+    tc.innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:100%">${bars}</svg>`;
   }
 
-  // ── Segment donut
-  const segs = Object.entries(segsObj);
-  const total = segs.reduce((a,[,v])=>a+v,0)||1;
-  let cum = 0;
-  const R=52, cx=72, cy=72;
-  const paths = segs.map(([name,val]) => {
-    const pct = val/total;
-    const start = cum * 2*Math.PI - Math.PI/2;
-    cum += pct;
-    const end = cum * 2*Math.PI - Math.PI/2;
-    const x1=cx+R*Math.cos(start), y1=cy+R*Math.sin(start);
-    const x2=cx+R*Math.cos(end),   y2=cy+R*Math.sin(end);
-    const large = pct > 0.5 ? 1 : 0;
-    const color = SEGMENT_COLORS[name]||"#888";
-    return `<path d="M${cx},${cy} L${x1},${y1} A${R},${R} 0 ${large},1 ${x2},${y2} Z" fill="${color}" opacity="0.85"/>`;
-  }).join('');
-  const legend = segs.map(([name,val])=>`
-    <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px">
-      <div style="width:7px;height:7px;border-radius:2px;background:${SEGMENT_COLORS[name]||'#888'};flex-shrink:0"></div>
-      <span style="font-size:11px;color:var(--text2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${name}</span>
-      <span style="font-family:var(--mono);font-size:10px;color:var(--text)">${val}</span>
-      <span style="font-family:var(--mono);font-size:9px;color:var(--text3)">${((val/total)*100).toFixed(0)}%</span>
-    </div>`).join('');
-  document.getElementById('seg-chart').innerHTML = `
-    <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
-      <svg viewBox="0 0 144 144" style="width:130px;height:130px;flex-shrink:0">
-        ${paths}
-        <circle cx="${cx}" cy="${cy}" r="26" fill="var(--surf)"/>
-        <text x="${cx}" y="${cy+4}" text-anchor="middle" font-size="11" fill="var(--text2)" font-family="JetBrains Mono">${total}</text>
-      </svg>
-      <div style="flex:1;min-width:140px">${legend}</div>
-    </div>`;
+  // Donut
+  if (Object.keys(segsObj).length) renderDonut('donut-chart', segsObj);
 
-  // ── Top leads table
-  const tbl = (top.length ? top : (top.leads || []));
-  document.getElementById('top-table').innerHTML = `<table><thead><tr>
-    <th>PROPERTY</th><th>PRICE</th><th>AREA</th><th>BEDS/BATHS</th><th>₨/SQFT</th><th>SEGMENT</th><th>SCORE</th><th>POSTED</th><th>LINK</th>
+  // Top leads table
+  const tbl = Array.isArray(top) ? top : (top.leads||[]);
+  document.getElementById('top-tbl').innerHTML = `<table><thead><tr>
+    <th>PROPERTY</th><th>AGENT / AGENCY</th><th>PRICE</th><th>AREA</th><th>BEDS/BATHS</th><th>₨/SQFT</th><th>SEGMENT</th><th>SCORE</th><th>CONTACT</th><th>LINK</th>
   </tr></thead><tbody>
-    ${tbl.map(l=>{
-      const s=Math.round(l.lead_score||0), c=scoreColor(s), sc=SEGMENT_COLORS[l.market_segment]||"var(--text2)";
-      const beds = l.bedrooms ? String(l.bedrooms).replace(/[^0-9]/g,'') : '–';
-      const baths = l.bathrooms ? String(l.bathrooms).replace(/[^0-9]/g,'') : '–';
-      const psf = l.price_per_sqft ? Number(l.price_per_sqft).toLocaleString(undefined,{maximumFractionDigits:0}) : '–';
+    ${tbl.map(l => {
+      const s=Math.round(l.lead_score||0), c=scoreColor(s), sc=SEG_COLOR[l.market_segment]||"var(--text2)";
+      const beds=numStr(l.bedrooms), baths=numStr(l.bathrooms);
+      const psf=l.price_per_sqft ? Number(l.price_per_sqft).toLocaleString(undefined,{maximumFractionDigits:0}) : '–';
+      const isVer=String(l.verified_agency||'').toLowerCase()==='verified';
       return `<tr>
         <td>
-          <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px" title="${sanitize(l.title)}">${sanitize(l.title)||"—"}</div>
-          <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-top:2px">${sanitize(l.location)||""}</div>
+          <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px" title="${san(l.title)}">${san(l.title)||"—"}</div>
+          <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-top:2px">📍 ${san(l.location)||""}</div>
         </td>
-        <td style="font-family:var(--mono);color:var(--blue);font-size:11px;white-space:nowrap">${fmt(l.price)}</td>
+        <td>
+          <div style="font-size:11px;font-weight:500">${san(l.agent_name)||"–"}</div>
+          <div style="font-size:9px;color:var(--text2);font-family:var(--mono);margin-top:2px;display:flex;align-items:center;gap:5px">${san(l.agency_name)||""} ${isVer?'<span class="badge badge-verified">✓</span>':''}</div>
+        </td>
+        <td style="font-family:var(--mono);color:var(--accent);font-size:11px;white-space:nowrap">${fmt(l.price)}</td>
         <td style="font-family:var(--mono);font-size:10px;color:var(--text2)">${fmtArea(l.area_sqft)}</td>
-        <td style="font-family:var(--mono);font-size:10px;color:var(--text2);white-space:nowrap">${beds}🛏 / ${baths}🚿</td>
+        <td style="font-family:var(--mono);font-size:10px;color:var(--text2);white-space:nowrap">${beds}🛏 ${baths}🚿</td>
         <td style="font-family:var(--mono);font-size:10px;color:var(--purple)">₨${psf}</td>
         <td><span class="badge" style="background:${sc}18;color:${sc};border:1px solid ${sc}30">${l.market_segment||"—"}</span></td>
         <td>
           <div class="score-bar-wrap">
             <div class="score-bar-bg"><div class="score-bar-fill" style="width:${s}%;background:${c}"></div></div>
-            <span style="font-family:var(--mono);font-size:10px;color:${c};min-width:20px">${s}</span>
+            <span style="font-family:var(--mono);font-size:10px;color:${c};min-width:22px">${s}</span>
           </div>
         </td>
-        <td style="font-size:10px;color:var(--text3);font-family:var(--mono);white-space:nowrap">${sanitize(l.posted_date)||"—"}</td>
-        <td>${l.link ? `<a href="${l.link}" target="_blank" rel="noopener" class="btn-primary" style="font-size:9px;padding:3px 8px;white-space:nowrap">↗ View</a>` : '<span style="color:var(--text3)">—</span>'}</td>
+        <td style="white-space:nowrap">
+          ${l.phone_number?`<a href="tel:${san(l.phone_number)}" class="btn btn-ghost" style="font-size:9px;padding:3px 8px;margin-right:3px">📞</a>`:''}
+          ${l.email?`<a href="mailto:${san(l.email)}" class="btn btn-ghost" style="font-size:9px;padding:3px 8px">✉</a>`:''}
+          ${!l.phone_number&&!l.email?'<span style="color:var(--text3);font-size:10px">—</span>':''}
+        </td>
+        <td>${l.link?`<a href="${l.link}" target="_blank" rel="noopener" class="btn btn-accent" style="font-size:9px;padding:3px 9px">↗ View</a>`:'—'}</td>
       </tr>`;
     }).join('')}
   </tbody></table>`;
 }
 
-// ── Leads ─────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// LEADS
+// ══════════════════════════════════════════════════════════════
 async function renderLeads() {
-  const el = document.getElementById('main-content');
-  const f = state.leadsFilters;
+  const el = document.getElementById('main');
+  const f = state.f;
 
   el.innerHTML = `
-    <div class="page-eyebrow">LIVE DATABASE</div>
-    <div class="page-title">All Leads</div>
-    <div class="page-sub" id="leads-sub" style="font-family:var(--mono);font-size:10px;color:var(--text2)">Loading…</div>
+    <div class="pg-eyebrow">LIVE DATABASE</div>
+    <div class="pg-title">All Leads</div>
+    <div class="pg-sub" id="leads-sub">Loading…</div>
 
     <div class="filter-bar">
-      <div class="filter-group">
+      <div class="fg">
         <label>SEGMENT</label>
-        <select onchange="filterLeads('segment',this.value)" style="width:140px">
+        <select onchange="setFilter('segment',this.value)" style="width:145px">
           <option value="">All Segments</option>
           ${["Budget Area","Mid-Value Area","Premium Area","Luxury Area"].map(s=>`<option value="${s}" ${f.segment===s?"selected":""}>${s}</option>`).join('')}
         </select>
       </div>
-      <div class="filter-group">
+      <div class="fg">
         <label>BEDROOMS</label>
-        <select onchange="filterLeads('bedrooms',this.value)" style="width:100px">
+        <select onchange="setFilter('bedrooms',this.value)" style="width:100px">
           <option value="">Any</option>
-          ${[1,2,3,4,5].map(n=>`<option value="${n}" ${f.bedrooms==n?"selected":""}>${n} Bed${n>1?'s':''}</option>`).join('')}
+          ${[1,2,3,4,5].map(n=>`<option value="${n}" ${f.bedrooms==n?"selected":""}>${n} Bed${n>1?"s":""}</option>`).join('')}
         </select>
       </div>
-      <div class="filter-group">
+      <div class="fg">
         <label>MIN SCORE</label>
-        <input type="number" placeholder="0–100" style="width:80px" value="${f.min_score||""}" oninput="filterLeads('min_score',this.value)">
+        <input type="number" min="0" max="100" placeholder="0–100" style="width:80px" value="${f.min_score||""}" oninput="setFilter('min_score',this.value)">
       </div>
-      <div class="filter-group">
-        <label>MIN PRICE (L)</label>
-        <input type="number" placeholder="e.g. 50" style="width:90px" value="${f.min_price||""}" oninput="filterLeads('min_price',this.value ? this.value*100000 : '')">
+      <div class="fg">
+        <label>MIN PRICE (Lakh)</label>
+        <input type="number" min="0" placeholder="e.g. 50" style="width:90px" value="${f.min_price?f.min_price/100000:""}" oninput="setFilter('min_price',this.value?this.value*100000:'')">
       </div>
-      <div class="filter-group">
-        <label>MAX PRICE (L)</label>
-        <input type="number" placeholder="e.g. 500" style="width:90px" value="${f.max_price ? f.max_price/100000 : ""}" oninput="filterLeads('max_price',this.value ? this.value*100000 : '')">
+      <div class="fg">
+        <label>MAX PRICE (Lakh)</label>
+        <input type="number" min="0" placeholder="e.g. 500" style="width:90px" value="${f.max_price?f.max_price/100000:""}" oninput="setFilter('max_price',this.value?this.value*100000:'')">
       </div>
-      <div class="filter-group">
+      <div class="fg">
         <label>LOCATION</label>
-        <input type="text" placeholder="Search area…" style="width:140px" value="${f.location||""}" oninput="filterLeads('location',this.value)">
+        <input type="text" placeholder="Search area…" style="width:140px" value="${f.location||""}" oninput="setFilter('location',this.value)">
       </div>
-      <div class="filter-group">
+      <div class="fg">
         <label>SORT BY</label>
-        <select onchange="filterLeads('sort_by',this.value)" style="width:130px">
-          <option value="lead_score"    ${f.sort_by==="lead_score"?"selected":""}>Score ↓</option>
-          <option value="price"         ${f.sort_by==="price"?"selected":""}>Price ↓</option>
-          <option value="area_sqft"     ${f.sort_by==="area_sqft"?"selected":""}>Area ↓</option>
+        <select onchange="setFilter('sort_by',this.value)" style="width:130px">
+          <option value="lead_score"     ${f.sort_by==="lead_score"?"selected":""}>Score ↓</option>
+          <option value="price"          ${f.sort_by==="price"?"selected":""}>Price ↓</option>
+          <option value="area_sqft"      ${f.sort_by==="area_sqft"?"selected":""}>Area ↓</option>
           <option value="price_per_sqft" ${f.sort_by==="price_per_sqft"?"selected":""}>₨/Sqft ↓</option>
-          <option value="posted_date"   ${f.sort_by==="posted_date"?"selected":""}>Newest First</option>
         </select>
       </div>
-      <button class="filter-reset" onclick="resetFilters()">✕ Reset</button>
+      <button class="btn-reset" onclick="resetFilters()">✕ Reset</button>
+      <div class="filter-count" id="leads-count"></div>
     </div>
 
     <div id="leads-list">
-      ${[...Array(6)].map(()=>`<div class="skel" style="height:80px;margin-bottom:8px;border-radius:var(--rl)"></div>`).join('')}
+      ${[...Array(5)].map(()=>`<div class="skel" style="height:80px;margin-bottom:8px;border-radius:var(--rl)"></div>`).join('')}
     </div>
     <div class="pagination" id="leads-pagination"></div>`;
 
-  const params = new URLSearchParams(
-    Object.fromEntries(Object.entries(f).filter(([,v])=>v!==""))
-  ).toString();
-  const data = await get(`/api/leads?${params}`);
+  // Build params — only API-supported filters
+  const params = new URLSearchParams();
+  if (f.page)    params.set('page',     f.page);
+  if (f.limit)   params.set('limit',    f.limit);
+  if (f.sort_by) params.set('sort_by',  f.sort_by);
+  if (f.segment) params.set('segment',  f.segment);
+  if (f.min_score !== "" && f.min_score != null) params.set('min_score', f.min_score);
+  if (f.location) params.set('location', f.location);
 
-  const total = data.total ?? 0;
-  const page = data.page ?? f.page;
-  const pages = data.pages ?? 1;
-  document.getElementById('leads-sub').textContent =
-    `${total.toLocaleString()} leads found · page ${page} of ${pages}`;
+  const data = await apiGet(`/api/leads?${params.toString()}`);
+  let leads = data.leads || [];
 
-  const leads = data.leads || [];
+  // Client-side filters for unsupported API params
+  if (f.bedrooms !== "" && f.bedrooms != null) {
+    const bd = parseFloat(f.bedrooms);
+    leads = leads.filter(l => {
+      const b = parseFloat(String(l.bedrooms||'').replace(/[^0-9.]/g,''));
+      return !isNaN(b) && b === bd;
+    });
+  }
+  if (f.min_price !== "" && f.min_price != null) {
+    leads = leads.filter(l => parseFloat(l.price||0) >= parseFloat(f.min_price));
+  }
+  if (f.max_price !== "" && f.max_price != null) {
+    leads = leads.filter(l => parseFloat(l.price||0) <= parseFloat(f.max_price));
+  }
+
+  const total   = data.total ?? 0;
+  const curPage = data.page  ?? f.page;
+  const pages   = data.pages ?? 1;
+  const subTxt  = `${total.toLocaleString()} leads · page ${curPage} of ${pages}`;
+  const countEl = document.getElementById('leads-count');
+  const subEl   = document.getElementById('leads-sub');
+  if (subEl)   subEl.textContent = subTxt;
+  if (countEl) countEl.textContent = subTxt;
+
   if (!leads.length) {
     document.getElementById('leads-list').innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state-icon">⬡</div>
-        <div class="empty-state-text">No leads match your filters</div>
-      </div>`;
+      <div class="empty"><div class="empty-icon">⬡</div><div class="empty-text">No leads match your filters</div></div>`;
   } else {
-    document.getElementById('leads-list').innerHTML = leads.map((l,idx) => {
-      const s = Math.round(l.lead_score || 0);
-      const c = scoreColor(s);
-      const sc = SEGMENT_COLORS[l.market_segment] || "var(--text2)";
-      const beds  = l.bedrooms  ? String(l.bedrooms).replace(/[^0-9]/g,'')  : '–';
-      const baths = l.bathrooms ? String(l.bathrooms).replace(/[^0-9]/g,'') : '–';
-      const psf   = l.price_per_sqft ? Number(l.price_per_sqft).toLocaleString(undefined,{maximumFractionDigits:0}) : '–';
-      const isVerified = String(l.verified_agency||'').toLowerCase() === 'verified';
-
-      // All columns from zameen_karachi_flats CSV + zameen_market_segments CSV
-      const detailFields = [
-        // ── Listing identity
-        ["PROPERTY ID",          sanitize(l.property_id)],
-        ["POSTED DATE",          sanitize(l.posted_date)],
-        ["LOCATION",             sanitize(l.location)],
-        // ── Property specs
-        ["AREA (SQFT)",          fmtArea(l.area_sqft)],
-        ["BEDROOMS",             l.bedrooms  ? sanitize(String(l.bedrooms))  : "–"],
-        ["BATHROOMS",            l.bathrooms ? sanitize(String(l.bathrooms)) : "–"],
-        ["BED/BATH RATIO",       fmtNum(l.bed_bath_ratio, 2)],
-        // ── Pricing
-        ["PRICE",                fmt(l.price)],
-        ["PRICE / SQFT",         psf !== "–" ? "₨" + psf + "/sqft" : "–"],
-        // ── ML scoring
-        ["LEAD SCORE",           `<span style="color:${c};font-weight:700">${s} / 100</span> <span class="badge" style="background:${c}18;color:${c};border:1px solid ${c}30;margin-left:4px">${scoreLabel(s)}</span>`],
-        ["MARKET SEGMENT",       `<span class="badge" style="background:${sc}18;color:${sc};border:1px solid ${sc}30">${sanitize(l.market_segment)||"–"}</span>`],
-        ["CLUSTER",              l.cluster != null ? String(l.cluster) : "–"],
-        // ── Agent / Agency
-        ["AGENT NAME",           sanitize(l.agent_name)],
-        ["AGENCY NAME",          sanitize(l.agency_name)],
-        ["AGENCY VERIFIED",      isVerified ? '<span style="color:#22c55e;font-weight:700">✓ Verified</span>' : '<span style="color:var(--text3)">Unverified</span>'],
-        ["TOTAL AGENT LISTINGS", l.total_agent_listings != null ? String(l.total_agent_listings) : "–"],
-        // ── Contact
-        ["PHONE",                l.phone_number ? `<a href="tel:${sanitize(l.phone_number)}">${sanitize(l.phone_number)}</a>` : "–"],
-        ["EMAIL",                l.email ? `<a href="mailto:${sanitize(l.email)}">${sanitize(l.email)}</a>` : "–"],
-        // ── Links
-        ["LISTING URL",          l.link ? `<a href="${l.link}" target="_blank" rel="noopener">zameen.com →</a>` : "–"],
-        ["AGENCY PROFILE",       l.agency_url ? `<a href="${l.agency_url}" target="_blank" rel="noopener">View Profile →</a>` : "–"],
-      ];
-
-      return `<div class="lead-card fade" style="border-left-color:${c};animation-delay:${idx*0.03}s">
-        <div class="lead-card-header" onclick="toggleCard(this)">
-          <div style="flex:1;min-width:0">
-            <div class="lead-title" title="${sanitize(l.title)}">${sanitize(l.title)||"Untitled"}</div>
-            <div class="lead-meta-row">
-              <span class="lead-meta-chip" style="color:var(--blue);font-weight:600">${fmt(l.price)}</span>
-              <span class="lead-meta-sep">·</span>
-              <span class="lead-meta-chip">${fmtArea(l.area_sqft)}</span>
-              <span class="lead-meta-sep">·</span>
-              <span class="lead-meta-chip">${beds} 🛏 ${baths} 🚿</span>
-              <span class="lead-meta-sep">·</span>
-              <span class="lead-meta-chip" style="color:var(--purple)">₨${psf}/sqft</span>
-              <span class="badge" style="background:${sc}18;color:${sc};border:1px solid ${sc}30">${l.market_segment||"—"}</span>
-              ${isVerified ? `<span class="badge" style="background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.3)">✓ Verified</span>` : ''}
-            </div>
-            <div class="lead-location">
-              📍 ${sanitize(l.location)||"–"}
-              ${l.agency_name ? `<span class="lead-meta-sep">·</span> ${sanitize(l.agency_name)}` : ''}
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
-            <div class="lead-score-block">
-              <div class="lead-score-num" style="color:${c}">${s}</div>
-              <div class="lead-score-lbl">SCORE</div>
-              <div style="margin-top:3px">
-                <span class="badge" style="background:${c}18;color:${c};border:1px solid ${c}30;font-size:8px">${scoreLabel(s)}</span>
-              </div>
-            </div>
-            ${l.link ? `<a href="${l.link}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="btn-primary" style="font-size:9px;padding:4px 10px;white-space:nowrap">↗ View Listing</a>` : ''}
-          </div>
-        </div>
-        <div class="lead-body">
-          <div class="lead-body-inner">
-            ${l.description ? `<div class="lead-desc" id="desc-${l.property_id||idx}">${sanitize(l.description)}<span class="lead-desc-fade"></span></div>` : ''}
-            <div class="lead-grid">
-              ${detailFields.map(([k,v])=>`
-                <div>
-                  <div class="lead-field-label">${k}</div>
-                  <div class="lead-field-val">${v||"–"}</div>
-                </div>`).join('')}
-            </div>
-            <div class="lead-actions">
-              <span style="font-family:var(--mono);font-size:8px;color:var(--text3);letter-spacing:1px">QUICK ACTIONS</span>
-              ${l.link        ? `<a href="${l.link}"       target="_blank" rel="noopener" class="btn-primary" style="font-size:10px">↗ View Listing</a>` : ''}
-              ${l.agency_url  ? `<a href="${l.agency_url}" target="_blank" rel="noopener" class="btn-ghost">Agency Profile</a>` : ''}
-              ${l.phone_number? `<a href="tel:${l.phone_number}" class="btn-ghost">📞 ${sanitize(l.phone_number)}</a>` : ''}
-              ${l.email       ? `<a href="mailto:${l.email}" class="btn-ghost">✉ Email Agent</a>` : ''}
-            </div>
-          </div>
-        </div>
-      </div>`;
-    }).join('');
+    document.getElementById('leads-list').innerHTML = leads.map((l,idx) => buildLeadCard(l,idx)).join('');
   }
 
   // Pagination
-  const totalPages = Math.min(data.pages || 1, 10);
-  let paginationHTML = '';
-  for (let p = 1; p <= totalPages; p++) {
-    if (p === 1 || p === totalPages || Math.abs(p - page) <= 2) {
-      paginationHTML += `<button class="page-btn ${p===page?"active":""}" onclick="goPage(${p})">${p}</button>`;
-    } else if (Math.abs(p - page) === 3) {
-      paginationHTML += `<span class="page-ellipsis">…</span>`;
+  let pHTML = '';
+  const totalPages = Math.min(pages, 10);
+  if (totalPages > 1) {
+    if (curPage > 1) pHTML += `<button class="pg-btn" onclick="goPage(${curPage-1})">← Prev</button>`;
+    for (let p=1; p<=totalPages; p++) {
+      if (p===1||p===totalPages||Math.abs(p-curPage)<=2) {
+        pHTML += `<button class="pg-btn ${p===curPage?"active":""}" onclick="goPage(${p})">${p}</button>`;
+      } else if (Math.abs(p-curPage)===3) {
+        pHTML += `<span class="pg-ellipsis">…</span>`;
+      }
     }
+    if (curPage < totalPages) pHTML += `<button class="pg-btn" onclick="goPage(${curPage+1})">Next →</button>`;
   }
-  document.getElementById('leads-pagination').innerHTML = paginationHTML;
+  document.getElementById('leads-pagination').innerHTML = pHTML;
 }
 
-function toggleCard(header) {
-  const body = header.nextElementSibling;
-  const isOpen = body.style.display === "block";
-  body.style.display = isOpen ? "none" : "block";
+function buildLeadCard(l, idx) {
+  const s=Math.round(l.lead_score||0), c=scoreColor(s), sc=SEG_COLOR[l.market_segment]||"var(--text2)";
+  const beds=numStr(l.bedrooms), baths=numStr(l.bathrooms);
+  const psf=l.price_per_sqft ? Number(l.price_per_sqft).toLocaleString(undefined,{maximumFractionDigits:0}) : '–';
+  const isVer=String(l.verified_agency||'').toLowerCase()==='verified';
+
+  return `<div class="lead-card fade" style="border-left-color:${c};animation-delay:${idx*.025}s">
+    <div class="lead-hdr" onclick="toggleCard(this)">
+      <div style="flex:1;min-width:0">
+        <div class="lead-title" title="${san(l.title)}">${san(l.title)||"Untitled"}</div>
+        <div class="lead-chips">
+          <span class="chip" style="color:var(--accent);font-weight:700">${fmt(l.price)}</span>
+          <span class="chip-sep">·</span>
+          <span class="chip">${fmtArea(l.area_sqft)}</span>
+          <span class="chip-sep">·</span>
+          <span class="chip">${beds}🛏 ${baths}🚿</span>
+          <span class="chip-sep">·</span>
+          <span class="chip" style="color:var(--purple)">₨${psf}/sqft</span>
+          <span class="badge" style="background:${sc}18;color:${sc};border:1px solid ${sc}30">${l.market_segment||"—"}</span>
+          ${isVer?`<span class="badge badge-verified">✓ Verified</span>`:''}
+        </div>
+        <div class="lead-loc">
+          📍 ${san(l.location)||"–"}
+          ${l.agent_name ? `<span class="chip-sep">·</span><span>${san(l.agent_name)}</span>` : ''}
+          ${l.agency_name ? `<span class="chip-sep">·</span><span style="color:var(--text3)">${san(l.agency_name)}</span>` : ''}
+          ${l.total_agent_listings != null ? `<span class="chip-sep">·</span><span style="color:var(--text3)">${san(String(l.total_agent_listings))} listings</span>` : ''}
+        </div>
+      </div>
+      <div class="lead-right">
+        <div class="score-big">
+          <div class="score-big-num" style="color:${c}">${s}</div>
+          <div class="score-big-lbl">LEAD SCORE</div>
+          <div style="margin-top:4px"><span class="badge" style="background:${c}18;color:${c};border:1px solid ${c}30;font-size:8px">${scoreLabel(s)}</span></div>
+        </div>
+        <div class="expand-icon">▾ expand</div>
+      </div>
+    </div>
+    <div class="lead-body">
+      <div class="lead-body-inner">
+        ${l.description ? `<div class="lead-desc">${san(l.description)}</div>` : ''}
+
+        <div class="ld-section">
+          <div class="ld-section-title">PROPERTY DETAILS</div>
+          <div class="ld-grid">
+            <div><div class="lf-label">PROPERTY ID</div><div class="lf-val mono">${san(l.property_id)}</div></div>
+            <div><div class="lf-label">POSTED DATE</div><div class="lf-val mono">${san(l.posted_date)}</div></div>
+            <div><div class="lf-label">LOCATION</div><div class="lf-val">${san(l.location)}</div></div>
+            <div><div class="lf-label">AREA</div><div class="lf-val mono">${fmtArea(l.area_sqft)}</div></div>
+            <div><div class="lf-label">BEDROOMS</div><div class="lf-val mono">${beds}</div></div>
+            <div><div class="lf-label">BATHROOMS</div><div class="lf-val mono">${baths}</div></div>
+            <div><div class="lf-label">BED/BATH RATIO</div><div class="lf-val mono">${fmtN(l.bed_bath_ratio,2)}</div></div>
+            <div><div class="lf-label">PRICE</div><div class="lf-val mono" style="color:var(--accent)">${fmt(l.price)}</div></div>
+            <div><div class="lf-label">PRICE / SQFT</div><div class="lf-val mono" style="color:var(--purple)">${psf!=="–"?"₨"+psf+"/sqft":"–"}</div></div>
+          </div>
+        </div>
+
+        <div class="ld-section">
+          <div class="ld-section-title">ML INTELLIGENCE</div>
+          <div class="ld-grid3">
+            <div>
+              <div class="lf-label">LEAD SCORE</div>
+              <div class="lf-val">
+                <span style="color:${c};font-weight:700;font-family:var(--mono);font-size:20px">${s}</span>
+                <span style="font-family:var(--mono);font-size:10px;color:var(--text3)">/100</span>
+                <span class="badge" style="background:${c}18;color:${c};border:1px solid ${c}30;margin-left:6px">${scoreLabel(s)}</span>
+              </div>
+            </div>
+            <div>
+              <div class="lf-label">MARKET SEGMENT</div>
+              <div class="lf-val"><span class="badge" style="background:${sc}18;color:${sc};border:1px solid ${sc}30;font-size:11px;padding:4px 10px">${san(l.market_segment)||"–"}</span></div>
+            </div>
+            <div>
+              <div class="lf-label">CLUSTER ID</div>
+              <div class="lf-val mono">${l.cluster != null ? String(l.cluster) : "–"}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ld-section">
+          <div class="ld-section-title">AGENT & AGENCY</div>
+          <div class="ld-grid">
+            <div><div class="lf-label">AGENT NAME</div><div class="lf-val">${san(l.agent_name)}</div></div>
+            <div><div class="lf-label">AGENCY NAME</div><div class="lf-val">${san(l.agency_name)}</div></div>
+            <div>
+              <div class="lf-label">VERIFICATION</div>
+              <div class="lf-val">${isVer?'<span class="badge badge-verified" style="font-size:10px">✓ Verified Agency</span>':'<span style="color:var(--text3)">Not Verified</span>'}</div>
+            </div>
+            <div><div class="lf-label">TOTAL AGENT LISTINGS</div><div class="lf-val mono">${l.total_agent_listings != null ? san(String(l.total_agent_listings)) : "–"}</div></div>
+          </div>
+        </div>
+
+        <div class="ld-section">
+          <div class="ld-section-title">CONTACT & LINKS</div>
+          <div class="ld-grid">
+            <div><div class="lf-label">PHONE</div><div class="lf-val mono">${l.phone_number?`<a href="tel:${san(l.phone_number)}">${san(l.phone_number)}</a>`:"–"}</div></div>
+            <div><div class="lf-label">EMAIL</div><div class="lf-val">${l.email?`<a href="mailto:${san(l.email)}">${san(l.email)}</a>`:"–"}</div></div>
+            <div><div class="lf-label">LISTING URL</div><div class="lf-val">${l.link?`<a href="${l.link}" target="_blank" rel="noopener">zameen.com ↗</a>`:"–"}</div></div>
+            <div><div class="lf-label">AGENCY PROFILE</div><div class="lf-val">${l.agency_url?`<a href="${l.agency_url}" target="_blank" rel="noopener">View Profile ↗</a>`:"–"}</div></div>
+          </div>
+        </div>
+
+        <div class="lead-actions">
+          <span class="cta-label">QUICK ACTIONS</span>
+          ${l.link       ?`<a href="${l.link}"       target="_blank" rel="noopener" class="btn btn-accent">↗ View Listing</a>`:''}
+          ${l.agency_url ?`<a href="${l.agency_url}" target="_blank" rel="noopener" class="btn btn-ghost">Agency Profile</a>`:''}
+          ${l.phone_number?`<a href="tel:${san(l.phone_number)}" class="btn btn-green">📞 ${san(l.phone_number)}</a>`:''}
+          ${l.email       ?`<a href="mailto:${san(l.email)}" class="btn btn-ghost">✉ Email Agent</a>`:''}
+          <button onclick="copyContact(event,${JSON.stringify({name:l.agent_name,phone:l.phone_number,email:l.email,agency:l.agency_name,price:l.price,location:l.location})})" class="btn btn-ghost" style="margin-left:auto">📋 Copy Contact</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
 }
 
-function filterLeads(key, val) {
-  state.leadsFilters[key] = val;
-  state.leadsFilters.page = 1;
+function toggleCard(hdr) {
+  const body = hdr.nextElementSibling;
+  const open = body.style.display === "block";
+  body.style.display = open ? "none" : "block";
+  const icon = hdr.querySelector('.expand-icon');
+  if (icon) icon.textContent = open ? "▾ expand" : "▴ collapse";
+}
+
+function copyContact(evt, data) {
+  if (!data) return;
+  const txt = [
+    data.name    ? `Agent: ${data.name}`     : null,
+    data.agency  ? `Agency: ${data.agency}`  : null,
+    data.phone   ? `Phone: ${data.phone}`    : null,
+    data.email   ? `Email: ${data.email}`    : null,
+    data.location? `Location: ${data.location}` : null,
+    data.price   ? `Price: ${fmt(data.price)}` : null,
+  ].filter(Boolean).join('\n');
+  navigator.clipboard.writeText(txt).then(() => {
+    const btn = evt.currentTarget;
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => btn.textContent = '📋 Copy Contact', 1600);
+  }).catch(() => {});
+}
+
+function setFilter(key, val) {
+  state.f[key] = val;
+  state.f.page = 1;
   renderLeads();
 }
 
 function goPage(p) {
-  state.leadsFilters.page = p;
+  state.f.page = p;
   renderLeads();
-  window.scrollTo({top:0, behavior:'smooth'});
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function resetFilters() {
-  state.leadsFilters = { page:1, limit:20, sort_by:"lead_score", segment:"", min_score:"", location:"", bedrooms:"", min_price:"", max_price:"" };
+  state.f = { page:1, limit:20, sort_by:"lead_score", segment:"", min_score:"", location:"", bedrooms:"", min_price:"", max_price:"" };
   renderLeads();
 }
 
-// ── Analytics ─────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// ANALYTICS
+// ══════════════════════════════════════════════════════════════
 async function renderAnalytics() {
-  const el = document.getElementById('main-content');
+  const el = document.getElementById('main');
   el.innerHTML = `
-    <div class="page-eyebrow">MARKET INTELLIGENCE</div>
-    <div class="page-title">Analytics</div>
-    <div class="page-sub">Segment performance · Pricing density · Geo distribution</div>
+    <div class="pg-eyebrow">MARKET INTELLIGENCE</div>
+    <div class="pg-title">Analytics</div>
+    <div class="pg-sub">Segment performance · Pricing density · Geographic distribution</div>
 
-    <div class="three-col">
-      <div class="panel"><div class="panel-eyebrow">PRICING</div><div class="panel-title">Avg Price by Segment</div><div id="price-chart" style="height:170px" class="skel"></div></div>
-      <div class="panel"><div class="panel-eyebrow">QUALITY SCORE</div><div class="panel-title">Avg Lead Score by Segment</div><div id="score-chart" style="height:170px" class="skel"></div></div>
-      <div class="panel"><div class="panel-eyebrow">PRICE DENSITY</div><div class="panel-title">Avg ₨/Sqft by Segment</div><div id="psf-chart" style="height:170px" class="skel"></div></div>
+    <div class="g4" style="margin-bottom:14px">
+      <div class="mini-stat skel" style="height:70px" id="ms-1"></div>
+      <div class="mini-stat skel" style="height:70px" id="ms-2"></div>
+      <div class="mini-stat skel" style="height:70px" id="ms-3"></div>
+      <div class="mini-stat skel" style="height:70px" id="ms-4"></div>
     </div>
 
-    <div class="two-col">
+    <div class="g3">
+      <div class="panel"><div class="panel-eyebrow">PRICING</div><div class="panel-title">Avg Price by Segment</div><div id="c-price" style="height:170px" class="skel"></div></div>
+      <div class="panel"><div class="panel-eyebrow">QUALITY SCORE</div><div class="panel-title">Avg Lead Score by Segment</div><div id="c-score" style="height:170px" class="skel"></div></div>
+      <div class="panel"><div class="panel-eyebrow">PRICE DENSITY</div><div class="panel-title">Avg ₨/Sqft by Segment</div><div id="c-psf" style="height:170px" class="skel"></div></div>
+    </div>
+
+    <div class="g2">
       <div class="panel">
-        <div class="panel-eyebrow">GEO ANALYSIS</div>
-        <div class="panel-title">Top Locations by Volume</div>
-        <div id="loc-list"><div class="skel" style="height:200px"></div></div>
+        <div class="panel-eyebrow">GEO DISTRIBUTION</div>
+        <div class="panel-title">Top 20 Locations by Volume</div>
+        <div id="loc-list"><div class="skel" style="height:240px"></div></div>
       </div>
       <div class="panel">
-        <div class="panel-eyebrow">SEGMENT BREAKDOWN</div>
-        <div class="panel-title">Listing Count Distribution</div>
-        <div id="count-chart" style="height:170px" class="skel"></div>
+        <div class="panel-eyebrow">VOLUME</div>
+        <div class="panel-title">Listing Count per Segment</div>
+        <div id="c-count" style="height:170px" class="skel"></div>
       </div>
+    </div>
+
+    <div class="tbl-wrap">
+      <div class="tbl-hdr"><div><div class="panel-eyebrow">COMPARATIVE</div><div style="font-weight:700;font-size:13px">Segment Statistics</div></div></div>
+      <div id="seg-tbl"><div class="skel" style="height:120px;margin:16px"></div></div>
     </div>`;
 
-  const [segs, locs] = await Promise.all([
-    get('/api/trends/segments'),
-    get('/api/trends/locations')
-  ]);
+  const [segs, locs] = await Promise.all([apiGet('/api/trends/segments'), apiGet('/api/trends/locations')]);
+  const segsArr = Array.isArray(segs) ? segs : [];
 
-  function barChart(containerId, data, key, formatFn, colorFn, label) {
-    if (!data || !data.length) return;
-    const max = Math.max(...data.map(d=>+(d[key]||0)), 1);
-    const W=320, H=155, PAD=28;
-    const bw = (W - PAD*2) / data.length;
-    const bars = data.map((d,i) => {
-      const val = +(d[key]||0);
-      const bh = Math.max((val/max)*(H-48), 2);
-      const x = PAD + i*bw + bw*0.1;
-      const y = H - bh - 24;
-      const c = colorFn(d);
-      const lbl = (d.market_segment||"").replace(" Area","");
-      return `<rect x="${x}" y="${y}" width="${bw*0.8}" height="${bh}" rx="2" fill="${c}" opacity="0.8"/>
-              <text x="${x+bw*0.4}" y="${H-5}" text-anchor="middle" font-size="8" fill="var(--text3)" font-family="JetBrains Mono">${lbl}</text>
-              <text x="${x+bw*0.4}" y="${y-5}" text-anchor="middle" font-size="8" fill="${c}" font-family="JetBrains Mono">${formatFn(val)}</text>`;
-    }).join('');
-    const el = document.getElementById(containerId);
-    el.className = 'fade';
-    el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:100%">${bars}</svg>`;
-  }
+  // Mini stats
+  const totalListings = segsArr.reduce((a,s)=>a+(s.count||0),0);
+  const avgPsf = segsArr.length ? segsArr.reduce((a,s)=>a+(parseFloat(s.avg_price_per_sqft||0)),0)/segsArr.length : 0;
+  const topSeg = segsArr.length ? [...segsArr].sort((a,b)=>(b.count||0)-(a.count||0))[0] : null;
+  const topScore = segsArr.length ? [...segsArr].sort((a,b)=>(b.avg_score||0)-(a.avg_score||0))[0] : null;
+  [
+    { label:"TOTAL LISTINGS", val:totalListings.toLocaleString(), color:"var(--accent)" },
+    { label:"AVG ₨/SQFT",     val:avgPsf?"₨"+Math.round(avgPsf).toLocaleString():"–", color:"var(--purple)" },
+    { label:"TOP BY VOLUME",  val:topSeg?.market_segment?.replace(' Area','')||"–", color:SEG_COLOR[topSeg?.market_segment]||"var(--text2)" },
+    { label:"TOP BY SCORE",   val:topScore?.market_segment?.replace(' Area','')||"–", color:"var(--yellow)" },
+  ].forEach((m,i) => {
+    const el2 = document.getElementById(`ms-${i+1}`);
+    if (el2) { el2.className='mini-stat fade'; el2.innerHTML=`<div class="mini-stat-label">${m.label}</div><div class="mini-stat-val" style="color:${m.color}">${m.val}</div>`; }
+  });
 
-  barChart('price-chart', segs, 'avg_price', v => fmt(v), d=>SEGMENT_COLORS[d.market_segment]||"var(--accent)");
-  barChart('score-chart', segs, 'avg_score', v => Math.round(v||0), d=>SEGMENT_COLORS[d.market_segment]||"var(--accent)");
-  barChart('psf-chart',   segs, 'avg_price_per_sqft', v => v ? Number(v).toLocaleString(undefined,{maximumFractionDigits:0}) : '–', d=>SEGMENT_COLORS[d.market_segment]||"var(--accent)");
-  barChart('count-chart', segs, 'count', v => v, d=>SEGMENT_COLORS[d.market_segment]||"var(--accent)");
+  const lf = d => (d.market_segment||"").replace(" Area","").slice(0,7);
+  const cf = d => SEG_COLOR[d.market_segment]||"var(--accent)";
+  svgBars('c-price', segsArr, 'avg_price',         lf, cf, v=>fmt(v));
+  svgBars('c-score', segsArr, 'avg_score',          lf, cf, v=>Math.round(v||0));
+  svgBars('c-psf',   segsArr, 'avg_price_per_sqft', lf, cf, v=>v?Math.round(v).toLocaleString():'–');
+  svgBars('c-count', segsArr, 'count',              lf, cf, v=>v);
 
   // Locations
-  const locsArr = Array.isArray(locs) ? locs : (locs.locations || []);
-  const maxLoc = locsArr[0]?.count || 1;
-  document.getElementById('loc-list').innerHTML = locsArr.length ? `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 20px">
-      ${locsArr.slice(0,18).map((l,i)=>`
+  const locsArr = Array.isArray(locs) ? locs : [];
+  const maxLoc = locsArr[0]?.count||1;
+  document.getElementById('loc-list').innerHTML = locsArr.length ?
+    `<div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px">
+      ${locsArr.slice(0,20).map((l,i)=>`
         <div class="loc-row">
-          <span style="font-family:var(--mono);font-size:8px;color:var(--text3);min-width:16px;text-align:right">${i+1}</span>
+          <span class="loc-rank">${i+1}</span>
           <div style="flex:1;min-width:0">
             <div style="display:flex;justify-content:space-between;margin-bottom:3px">
-              <span style="font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px">${sanitize(l.location)||"Unknown"}</span>
+              <span style="font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px">${san(l.location)||"Unknown"}</span>
               <span style="font-family:var(--mono);font-size:9px;color:var(--accent);margin-left:6px">${l.count}</span>
             </div>
             <div class="loc-bar-bg"><div class="loc-bar-fill" style="width:${(l.count/maxLoc*100).toFixed(0)}%"></div></div>
           </div>
+          <span style="font-family:var(--mono);font-size:9px;color:var(--text3);min-width:28px;text-align:right">${fmtN(l.avg_score,0)}</span>
         </div>`).join('')}
-    </div>` : `<div class="empty-state"><div class="empty-state-text">No location data available</div></div>`;
-}
+    </div>` :
+    `<div class="empty"><div class="empty-text">No location data</div></div>`;
 
-// ── Segments ─────────────────────────────────────────────────
-async function renderSegments() {
-  const el = document.getElementById('main-content');
-  el.innerHTML = `
-    <div class="page-eyebrow">MARKET SEGMENTATION</div>
-    <div class="page-title">Segment Intelligence</div>
-    <div class="page-sub">ML-clustered market segments · Pricing bands · Opportunity scoring</div>
-    <div id="seg-cards" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-      ${[...Array(4)].map(()=>`<div class="skel" style="height:200px;border-radius:var(--rl)"></div>`).join('')}
-    </div>
-    <div class="table-wrap">
-      <div class="table-head">
-        <div><div class="panel-eyebrow">COMPARATIVE</div><div style="font-weight:700;font-size:13px">Segment Comparison Table</div></div>
-      </div>
-      <div id="seg-table"><div class="skel" style="height:120px;margin:16px"></div></div>
-    </div>`;
-
-  const segs = await get('/api/trends/segments');
-  const segsArr = Array.isArray(segs) ? segs : [];
-
-  if (segsArr.length) {
-    document.getElementById('seg-cards').innerHTML = segsArr.map(seg => {
-      const sc = SEGMENT_COLORS[seg.market_segment] || "var(--text2)";
-      const desc = SEGMENT_DESC[seg.market_segment] || "";
-      return `<div class="seg-card fade" style="border-top:2px solid ${sc}">
-        <div class="seg-card-header">
-          <div class="seg-color-block" style="background:${sc}"></div>
-          <div>
-            <div style="font-weight:800;font-size:14px">${seg.market_segment||"Unknown"}</div>
-            <div style="font-size:10px;color:var(--text2);font-family:var(--mono);margin-top:2px">${desc}</div>
-          </div>
-        </div>
-        <div class="seg-stats-grid">
-          <div class="seg-stat">
-            <div class="seg-stat-label">LISTINGS</div>
-            <div class="seg-stat-val" style="color:${sc}">${(seg.count||"–").toLocaleString?.() || seg.count}</div>
-          </div>
-          <div class="seg-stat">
-            <div class="seg-stat-label">AVG SCORE</div>
-            <div class="seg-stat-val" style="color:${scoreColor(seg.avg_score||0)}">${fmtNum(seg.avg_score,1)}</div>
-          </div>
-          <div class="seg-stat">
-            <div class="seg-stat-label">AVG PRICE</div>
-            <div class="seg-stat-val" style="color:var(--blue);font-size:13px">${fmt(seg.avg_price)}</div>
-          </div>
-          <div class="seg-stat">
-            <div class="seg-stat-label">AVG ₨/SQFT</div>
-            <div class="seg-stat-val" style="color:var(--purple);font-size:13px">${fmtPsf(seg.avg_price_per_sqft)}</div>
-          </div>
-          <div class="seg-stat">
-            <div class="seg-stat-label">AVG AREA</div>
-            <div class="seg-stat-val" style="font-size:13px">${fmtArea(seg.avg_area_sqft)}</div>
-          </div>
-          <div class="seg-stat">
-            <div class="seg-stat-label">AVG BEDS</div>
-            <div class="seg-stat-val" style="font-size:13px">${fmtNum(seg.avg_bedrooms,1)}</div>
-          </div>
-        </div>
-      </div>`;
-    }).join('');
-
-    document.getElementById('seg-table').innerHTML = `<table><thead><tr>
-      <th>SEGMENT</th><th>LISTINGS</th><th>AVG PRICE</th><th>AVG ₨/SQFT</th><th>AVG AREA</th><th>AVG BEDS</th><th>AVG BATHS</th><th>AVG SCORE</th><th>CLUSTER</th>
+  // Segment comparison table
+  document.getElementById('seg-tbl').innerHTML = segsArr.length ?
+    `<table><thead><tr>
+      <th>SEGMENT</th><th>LISTINGS</th><th>AVG PRICE</th><th>AVG ₨/SQFT</th><th>AVG AREA</th><th>AVG BEDS</th><th>AVG BATHS</th><th>AVG SCORE</th>
     </tr></thead><tbody>
       ${segsArr.map(seg => {
-        const sc = SEGMENT_COLORS[seg.market_segment] || "var(--text2)";
+        const sc=SEG_COLOR[seg.market_segment]||"var(--text2)";
         return `<tr>
           <td><span class="badge" style="background:${sc}18;color:${sc};border:1px solid ${sc}30">${seg.market_segment||"–"}</span></td>
-          <td style="font-family:var(--mono)">${(seg.count||"–").toLocaleString?.() || seg.count}</td>
-          <td style="font-family:var(--mono);color:var(--blue)">${fmt(seg.avg_price)}</td>
+          <td style="font-family:var(--mono)">${(seg.count||"–").toLocaleString?.()}</td>
+          <td style="font-family:var(--mono);color:var(--accent)">${fmt(seg.avg_price)}</td>
           <td style="font-family:var(--mono);color:var(--purple)">${fmtPsf(seg.avg_price_per_sqft)}</td>
           <td style="font-family:var(--mono)">${fmtArea(seg.avg_area_sqft)}</td>
-          <td style="font-family:var(--mono)">${fmtNum(seg.avg_bedrooms,1)}</td>
-          <td style="font-family:var(--mono)">${fmtNum(seg.avg_bathrooms,1)}</td>
+          <td style="font-family:var(--mono)">${fmtN(seg.avg_bedrooms,1)}</td>
+          <td style="font-family:var(--mono)">${fmtN(seg.avg_bathrooms,1)}</td>
           <td>
             <div class="score-bar-wrap">
               <div class="score-bar-bg"><div class="score-bar-fill" style="width:${Math.round(seg.avg_score||0)}%;background:${scoreColor(seg.avg_score||0)}"></div></div>
-              <span style="font-family:var(--mono);font-size:10px;color:${scoreColor(seg.avg_score||0)}">${fmtNum(seg.avg_score,1)}</span>
+              <span style="font-family:var(--mono);font-size:10px;color:${scoreColor(seg.avg_score||0)}">${fmtN(seg.avg_score,1)}</span>
             </div>
           </td>
-          <td style="font-family:var(--mono);color:var(--text3)">${seg.cluster ?? "–"}</td>
         </tr>`;
       }).join('')}
-    </tbody></table>`;
-  } else {
-    document.getElementById('seg-cards').innerHTML = `<div style="grid-column:1/-1"><div class="empty-state"><div class="empty-state-icon">▣</div><div class="empty-state-text">Segment data not yet available</div></div></div>`;
-    document.getElementById('seg-table').innerHTML = '';
-  }
+    </tbody></table>` :
+    `<div class="empty"><div class="empty-text">No segment data</div></div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+// SEGMENTS
+// ══════════════════════════════════════════════════════════════
+async function renderSegments() {
+  const el = document.getElementById('main');
+  el.innerHTML = `
+    <div class="pg-eyebrow">MARKET SEGMENTATION</div>
+    <div class="pg-title">Segment Intelligence</div>
+    <div class="pg-sub">KMeans K=4 clustering · Price tiers · Opportunity scoring</div>
+    <div id="seg-cards" class="g2eq">
+      ${[...Array(4)].map(()=>`<div class="skel" style="height:220px;border-radius:var(--rl)"></div>`).join('')}
+    </div>`;
+
+  const segs = await apiGet('/api/trends/segments');
+  const segsArr = Array.isArray(segs) ? segs : [];
+
+  document.getElementById('seg-cards').innerHTML = segsArr.length ?
+    segsArr.map(seg => {
+      const sc=SEG_COLOR[seg.market_segment]||"var(--text2)";
+      const desc=SEG_DESC[seg.market_segment]||"";
+      return `<div class="seg-card fade" style="border-top:2px solid ${sc}">
+        <div class="seg-hdr">
+          <div class="seg-swatch" style="background:${sc}"></div>
+          <div>
+            <div style="font-weight:800;font-size:15px">${seg.market_segment||"Unknown"}</div>
+            <div style="font-size:11px;color:var(--text2);margin-top:2px">${desc}</div>
+          </div>
+        </div>
+        <div class="seg-stats">
+          <div class="seg-stat"><div class="seg-stat-label">LISTINGS</div><div class="seg-stat-val" style="color:${sc}">${(seg.count||"–").toLocaleString?.()}</div></div>
+          <div class="seg-stat"><div class="seg-stat-label">AVG SCORE</div><div class="seg-stat-val" style="color:${scoreColor(seg.avg_score||0)}">${fmtN(seg.avg_score,1)}</div></div>
+          <div class="seg-stat"><div class="seg-stat-label">AVG PRICE</div><div class="seg-stat-val" style="color:var(--accent);font-size:14px">${fmt(seg.avg_price)}</div></div>
+          <div class="seg-stat"><div class="seg-stat-label">AVG ₨/SQFT</div><div class="seg-stat-val" style="color:var(--purple);font-size:14px">${fmtPsf(seg.avg_price_per_sqft)}</div></div>
+          <div class="seg-stat"><div class="seg-stat-label">AVG AREA</div><div class="seg-stat-val" style="font-size:13px">${fmtArea(seg.avg_area_sqft)}</div></div>
+          <div class="seg-stat"><div class="seg-stat-label">AVG BEDS</div><div class="seg-stat-val" style="font-size:13px">${fmtN(seg.avg_bedrooms,1)}</div></div>
+        </div>
+        <div style="margin-top:12px">
+          <button class="btn btn-ghost" onclick="showPageFiltered('${seg.market_segment}')" style="width:100%;justify-content:center;font-size:10px">
+            Browse ${seg.count||''} listings →
+          </button>
+        </div>
+      </div>`;
+    }).join('') :
+    `<div style="grid-column:1/-1"><div class="empty"><div class="empty-icon">▣</div><div class="empty-text">Segment data not yet available</div></div></div>`;
 }
 
 // ── Router ────────────────────────────────────────────────────
 function render() {
-  document.getElementById('main-content').innerHTML = '';
-  if      (state.page === 'dashboard') renderDashboard();
-  else if (state.page === 'leads')     renderLeads();
-  else if (state.page === 'analytics') renderAnalytics();
-  else if (state.page === 'segments')  renderSegments();
+  document.getElementById('main').innerHTML = '';
+  if      (state.page==='dashboard') renderDashboard();
+  else if (state.page==='leads')     renderLeads();
+  else if (state.page==='analytics') renderAnalytics();
+  else if (state.page==='segments')  renderSegments();
 }
 
 loadSidebarStats();
@@ -871,4 +956,3 @@ render();
 </script>
 </body>
 </html>
-
