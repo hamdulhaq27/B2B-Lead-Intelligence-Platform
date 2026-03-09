@@ -10,8 +10,8 @@
 | Service | URL |
 |---|---|
 | 🖥️ Frontend | [b2-b-lead-intelligence-platform.vercel.app](https://b2-b-lead-intelligence-platform.vercel.app/) |
-| ⚙️ Backend API | [b2b-lead-intelligence-platform.onrender.com](https://b2b-lead-intelligence-platform.onrender.com) |
-| 📖 API Docs | [b2b-lead-intelligence-platform.onrender.com/docs](https://b2b-lead-intelligence-platform.onrender.com/docs) |
+| ⚙️ Backend API | [b2b-lead-intelligence-platform.onrender.com](https://b2b-lead-intelligence-platform-1.onrender.com) |
+| 📖 API Docs | [b2b-lead-intelligence-platform.onrender.com/docs](https://b2b-lead-intelligence-platform-1.onrender.com/docs) |
 
 ---
 
