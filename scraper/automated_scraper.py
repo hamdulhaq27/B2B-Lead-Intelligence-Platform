@@ -19,7 +19,7 @@ BASE_URL = "https://www.zameen.com/Flats_Apartments/Karachi-2-{}.html"
 HEADLESS = True
 VISIT_AGENCY_PROFILES = True
 SINGLE_LISTING_MODE = False
-MAX_PAGES = 10
+MAX_PAGES = 7
 
 DAILY_CSV = "zameen_karachi_flats_today.csv"
 WEEKLY_CSV = "zameen_karachi_flats_last_7_days.csv"
