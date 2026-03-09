@@ -11,21 +11,28 @@ app = FastAPI(title="Zameen Intelligence API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://b2b-lead-intelligence-platform.vercel.app",
-        "https://b2-b-lead-intelligence-platform.vercel.app",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://localhost:5500",
-        "http://127.0.0.1:5500",
-    ],
+    # Covers both Vercel URL variants + local dev
+    allow_origins=["*"],
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# CSVs live at the project root; backend/main.py is one level down
-ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+# CSVs live at the project root.
+# In Docker:  WORKDIR=/project, main.py is at /project/backend/main.py → ROOT = /project
+# Locally:    main.py is at backend/main.py → ROOT = ../  (project root)
+# Fallback:   if neither location has the CSV, try cwd
+def _find_root() -> str:
+    candidate = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    if os.path.exists(os.path.join(candidate, "zameen_market_segments.csv")):
+        return candidate
+    # Maybe running with uvicorn from project root directly
+    cwd = os.getcwd()
+    if os.path.exists(os.path.join(cwd, "zameen_market_segments.csv")):
+        return cwd
+    return candidate  # best guess
+
+ROOT_DIR = _find_root()
 
 
 # ── Data loaders ──────────────────────────────────────────────
