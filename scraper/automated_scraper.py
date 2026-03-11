@@ -1,5 +1,3 @@
-# automated_scraper.py
-
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -19,7 +17,7 @@ BASE_URL = "https://www.zameen.com/Flats_Apartments/Karachi-2-{}.html"
 HEADLESS = True
 VISIT_AGENCY_PROFILES = True
 SINGLE_LISTING_MODE = False
-MAX_PAGES = 15   
+MAX_PAGES = 15
 
 DAILY_CSV = "zameen_karachi_flats_today.csv"
 WEEKLY_CSV = "zameen_karachi_flats_last_7_days.csv"
@@ -37,6 +35,12 @@ options.add_argument("--window-size=1920,1080")
 options.add_argument("--disable-blink-features=AutomationControlled")
 options.add_argument("--disable-extensions")
 options.add_argument("--disable-infobars")
+
+options.add_argument(
+    "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+)
+
+# Faster page loading
 options.page_load_strategy = "eager"
 
 # Block heavy resources
@@ -46,10 +50,6 @@ prefs = {
     "profile.managed_default_content_settings.fonts": 2
 }
 options.add_experimental_option("prefs", prefs)
-
-options.add_argument(
-    "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-)
 
 driver = webdriver.Chrome(
     service=Service("/usr/bin/chromedriver"),
@@ -62,12 +62,12 @@ driver.set_page_load_timeout(20)
 # Retry / Timeout Logic
 #####################
 MAX_RETRIES = 3
-RETRY_DELAY = 2   
-
+RETRY_DELAY = 2
 
 def load_url_with_retry(driver, url, retries=MAX_RETRIES, delay=RETRY_DELAY):
 
     for attempt in range(1, retries + 1):
+
         try:
             driver.get(url)
             return True
@@ -84,13 +84,14 @@ def load_url_with_retry(driver, url, retries=MAX_RETRIES, delay=RETRY_DELAY):
             if attempt < retries:
                 print(f"  ↻ Retrying in {delay}s...")
                 time.sleep(delay)
+
             else:
                 print(f"  ✗ All retries failed. Skipping.")
                 return False
 
         except WebDriverException as e:
 
-            print(f"  ⚠ WebDriverException: {e}")
+            print(f"  ⚠ WebDriverException on attempt {attempt}/{retries}: {e}")
 
             if attempt < retries:
                 time.sleep(delay)
@@ -103,6 +104,7 @@ def load_url_with_retry(driver, url, retries=MAX_RETRIES, delay=RETRY_DELAY):
 #####################
 # Helper Functions
 #####################
+
 def price_to_number(price_text):
 
     if not price_text:
@@ -159,6 +161,123 @@ def is_posted_today(posted_date_text):
         return False
 
 
+def extract_phone_number(driver):
+
+    try:
+
+        page_source = driver.page_source
+
+        patterns = [
+            r'\+92[\s-]?(\d{3})[\s-]?(\d{7})',
+            r'0(\d{3})[\s-]?(\d{7})',
+            r'(\d{4})[\s-]?(\d{7})'
+        ]
+
+        for pattern in patterns:
+
+            matches = re.findall(pattern, page_source)
+
+            if matches:
+
+                phone = ''.join(matches[0])
+
+                if phone.startswith('0'):
+                    phone = '+92' + phone[1:]
+
+                elif not phone.startswith('+92'):
+                    phone = '+92' + phone
+
+                return phone
+
+        return None
+
+    except:
+        return None
+
+
+def extract_email(driver):
+
+    try:
+
+        page_source = driver.page_source
+
+        email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b'
+
+        emails = re.findall(email_pattern, page_source)
+
+        valid = [
+            e for e in emails
+            if not any(x in e.lower() for x in ['example.com', 'test.com'])
+        ]
+
+        return valid[0] if valid else None
+
+    except:
+        return None
+
+
+def get_agency_profile_data(driver, agency_url):
+
+    if not agency_url:
+        return {}
+
+    try:
+
+        if not load_url_with_retry(driver, agency_url):
+            return {}
+
+        time.sleep(2)
+
+        soup = BeautifulSoup(driver.page_source, "html.parser")
+
+        data = {}
+
+        total_agent_listings = None
+
+        try:
+
+            count_divs = soup.find_all("div", class_="fw-700 u-mb4")
+
+            sale_count = rent_count = 0
+
+            for div in count_divs:
+
+                span = div.find("span")
+
+                if span and span.text.strip().isdigit():
+
+                    count = int(span.text.strip())
+                    parent_text = div.get_text()
+
+                    if "Sale" in parent_text:
+                        sale_count = count
+
+                    elif "Rent" in parent_text:
+                        rent_count = count
+
+            if sale_count or rent_count:
+                total_agent_listings = str(sale_count + rent_count)
+
+        except:
+            total_agent_listings = None
+
+        if total_agent_listings:
+            data['total_agent_listings'] = total_agent_listings
+
+        phone = extract_phone_number(driver)
+        if phone:
+            data['phone_number'] = phone
+
+        email = extract_email(driver)
+        if email:
+            data['email'] = email
+
+        return data
+
+    except:
+        return {}
+
+
 #####################
 # Scraping Logic
 #####################
@@ -175,13 +294,13 @@ while page <= MAX_PAGES:
     if not load_url_with_retry(driver, url):
         break
 
-    time.sleep(2)
+    time.sleep(3)
 
     soup = BeautifulSoup(driver.page_source, "html.parser")
+
     listings = soup.find_all("article")
 
     if not listings:
-        print("No listings found.")
         break
 
     todays_listing_found = False
@@ -201,9 +320,10 @@ while page <= MAX_PAGES:
         if not load_url_with_retry(driver, link):
             continue
 
-        time.sleep(1)
+        time.sleep(2)
 
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
         time.sleep(1)
 
         detail_soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -224,49 +344,89 @@ while page <= MAX_PAGES:
             else None
         )
 
+        bedrooms = safe_text(detail_soup.find("span", {"aria-label": "Beds"}))
+        bathrooms = safe_text(detail_soup.find("span", {"aria-label": "Baths"}))
+        area_sqft = safe_text(detail_soup.select_one('span[aria-label="Area"] span'))
+        description = safe_text(detail_soup.find("div", {"aria-label": "Property description"}))
         location = safe_text(detail_soup.find("span", {"aria-label": "Location"}))
 
+        property_id = None
+
+        contact_message = detail_soup.find("textarea", {"id": "contactFormMessage"})
+
+        if contact_message:
+            match = re.search(r'ID(\d+)', contact_message.get_text(strip=True))
+            if match:
+                property_id = match.group(1)
+
+        agent_name = safe_text(detail_soup.find("span", class_="d10ba6ac"))
+        agency_name = safe_text(detail_soup.find("div", class_="_0a8efec2"))
+
+        agency_url = None
+        agency_profile_link = detail_soup.find("a", href=re.compile(r'/Profile/'))
+
+        if agency_profile_link:
+            agency_url = "https://www.zameen.com" + agency_profile_link.get('href')
+
+        verified_agency = None
+
+        badge_tag = detail_soup.find("span", class_="fw-700")
+
+        if badge_tag:
+            verified_agency = badge_tag.get_text(strip=True)
+
+        phone_number = extract_phone_number(driver)
+        email = extract_email(driver)
+
+        if VISIT_AGENCY_PROFILES and agency_url:
+
+            agency_data = get_agency_profile_data(driver, agency_url)
+
+            total_agent_listings = agency_data.get('total_agent_listings', None)
+
+            if agency_data.get('phone_number') and not phone_number:
+                phone_number = agency_data['phone_number']
+
+            if agency_data.get('email') and not email:
+                email = agency_data['email']
+
+            if not load_url_with_retry(driver, link):
+                pass
+
+            time.sleep(1)
+
+        else:
+            total_agent_listings = None
+
         all_listings_today.append({
+
             "title": title,
             "price": price,
             "link": link,
+            "bedrooms": bedrooms,
+            "bathrooms": bathrooms,
+            "area_sqft": area_sqft,
+            "description": description,
             "posted_date": posted_date,
-            "location": location
+            "location": location,
+            "property_id": property_id,
+            "agent_name": agent_name,
+            "agency_name": agency_name,
+            "agency_url": agency_url,
+            "verified_agency": verified_agency,
+            "total_agent_listings": total_agent_listings,
+            "phone_number": phone_number,
+            "email": email
         })
 
         print(f"  ✓ Scraped: {title} | {location}")
 
         time.sleep(1)
 
-        if SINGLE_LISTING_MODE:
-            break
-
     if not todays_listing_found:
-        print("No listings posted today. Stopping.")
         break
 
     page += 1
-
-    time.sleep(2)  
-
+    time.sleep(2)
 
 print(f"\nTotal listings scraped today: {len(all_listings_today)}")
-
-
-#################
-# Save daily CSV
-#################
-
-fieldnames = ["title", "price", "link", "posted_date", "location"]
-
-with open(DAILY_CSV, "w", newline="", encoding="utf-8") as f:
-
-    writer = csv.DictWriter(f, fieldnames=fieldnames)
-
-    writer.writeheader()
-    writer.writerows(all_listings_today)
-
-
-print(f"Saved to {DAILY_CSV}")
-
-driver.quit()
