@@ -157,8 +157,10 @@ if __name__ == "__main__":
 
     df_raw = pd.read_csv(input_path)
     print(f"Loaded {len(df_raw)} raw rows.")
-
     df_clean = preprocess_listings(df_raw)
     df_clean.to_csv(output_path, index=False)
     print(f"Preprocessing done. {len(df_clean)} listings saved to {output_path}.")
-    print(df_clean[["price", "area_sqft", "bedrooms", "bathrooms"]].describe())
+    
+    cols_to_show = [c for c in ["price", "area_sqft", "bedrooms", "bathrooms"] if c in df_clean.columns]
+    if cols_to_show:
+        print(df_clean[cols_to_show].describe())
