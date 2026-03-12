@@ -1,5 +1,3 @@
-# preprocessing.py
-
 import pandas as pd
 import numpy as np
 import re
@@ -9,7 +7,7 @@ def convert_area_to_sqft(area_str):
     if pd.isna(area_str):
         return np.nan
     try:
-        num = float(re.findall(r"[\d.]+", str(area_str))[0])
+        num = float(re.findall(r"[\d,.]+", str(area_str))[0].replace(',', ''))
         return num * 9
     except:
         return np.nan
@@ -64,9 +62,15 @@ def fill_missing_values(df):
 
 def preprocess_listings(df):
     df = df.copy()
-    # area_sqft column already exists from scraper — skip conversion if present
-    if "area_sqft" not in df.columns and "area" in df.columns:
+
+    # Convert area_sqft to numeric — handles both raw strings ('260 Sq. Yd.')
+    # and cases where the column doesn't exist yet (fall back to 'area')
+    if "area_sqft" in df.columns:
+        if not pd.api.types.is_numeric_dtype(df["area_sqft"]):
+            df["area_sqft"] = df["area_sqft"].apply(convert_area_to_sqft)
+    elif "area" in df.columns:
         df["area_sqft"] = df["area"].apply(convert_area_to_sqft)
+
     df["price"] = df["price"].apply(convert_to_numeric)
     df["bedrooms"] = df["bedrooms"].apply(convert_to_numeric)
     df["bathrooms"] = df["bathrooms"].apply(convert_to_numeric)
@@ -80,7 +84,6 @@ def preprocess_listings(df):
     return df
 
 if __name__ == "__main__":
-    # reads from root-level today CSV, saves cleaned version
     df_raw = pd.read_csv("zameen_karachi_flats_today.csv")
     df_clean = preprocess_listings(df_raw)
     df_clean.to_csv("zameen_karachi_flats_today.csv", index=False)
