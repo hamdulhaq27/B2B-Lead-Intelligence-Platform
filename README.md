@@ -284,6 +284,17 @@ Dashboard updated by morning ✅
 
 ---
 
+## Images
+
+![Image 1](assets/im1.png)
+![Image 2](assets/im2.png)
+![Image 3](assets/im3.png)
+![Image 4](assets/im4.png)
+![Image 5](assets/im5.png)
+![Image 6](assets/im6.png)
+
+---
+
 ## 📄 License
 
 MIT License — free to use and modify.
