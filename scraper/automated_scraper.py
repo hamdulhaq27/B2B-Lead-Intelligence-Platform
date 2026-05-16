@@ -33,19 +33,20 @@ options.add_argument("--disable-gpu")
 options.add_argument("--window-size=1920,1080")
 options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
 options.add_argument("--disable-blink-features=AutomationControlled")
+options.add_argument("--blink-settings=imagesEnabled=false") 
 
 # Use system chromedriver installed by the workflow
 driver = webdriver.Chrome(
     service=Service("/usr/bin/chromedriver"),
     options=options
 )
-driver.set_page_load_timeout(30)
+driver.set_page_load_timeout(15)
 
 #####################
 # Retry / Timeout Logic
 #####################
-MAX_RETRIES = 3
-RETRY_DELAY = 5  # seconds to wait between retries
+MAX_RETRIES = 2
+RETRY_DELAY = 3  # seconds to wait between retries
 
 def load_url_with_retry(driver, url, retries=MAX_RETRIES, delay=RETRY_DELAY):
     """
@@ -156,7 +157,7 @@ def get_agency_profile_data(driver, agency_url):
     try:
         if not load_url_with_retry(driver, agency_url):
             return {}
-        time.sleep(2)
+        time.sleep(1.5)
         soup = BeautifulSoup(driver.page_source, "html.parser")
         data = {}
 
@@ -204,7 +205,7 @@ while page <= MAX_PAGES:
         print(f"Failed to load page {page} after all retries. Stopping.")
         break
 
-    time.sleep(3)
+    time.sleep(1.5)
 
     soup = BeautifulSoup(driver.page_source, "html.parser")
     listings = soup.find_all("article")
@@ -226,7 +227,7 @@ while page <= MAX_PAGES:
             print(f"Failed to load listing after all retries. Skipping.")
             continue
 
-        time.sleep(2)
+        time.sleep(1.5)
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(1)
 
