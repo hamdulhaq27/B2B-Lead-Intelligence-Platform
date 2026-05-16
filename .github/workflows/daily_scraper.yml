@@ -11,7 +11,7 @@ permissions:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 180
 
     steps:
       - uses: actions/checkout@v4
@@ -33,7 +33,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run scraper
-        timeout-minutes: 90
+        timeout-minutes: 150
         run: python scraper/automated_scraper.py
 
       - name: Run preprocessing
