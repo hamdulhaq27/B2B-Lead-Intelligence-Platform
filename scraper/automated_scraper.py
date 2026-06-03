@@ -339,10 +339,13 @@ print(f"Saved to {DAILY_CSV}")
 #################
 weekly_listings = []
 if os.path.exists(WEEKLY_CSV):
-    df_week = pd.read_csv(WEEKLY_CSV)
-    df_week['posted_date_parsed'] = pd.to_datetime(df_week['posted_date'], errors='coerce')
-    cutoff = datetime.now() - timedelta(days=7)
-    weekly_listings = df_week[df_week['posted_date_parsed'] >= cutoff].to_dict('records')
+    try:
+        df_week = pd.read_csv(WEEKLY_CSV)
+        df_week['posted_date_parsed'] = pd.to_datetime(df_week['posted_date'], errors='coerce')
+        cutoff = datetime.now() - timedelta(days=7)
+        weekly_listings = df_week[df_week['posted_date_parsed'] >= cutoff].to_dict('records')
+    except Exception:
+        print("⚠ Could not read weekly CSV, starting fresh.")
 
 existing_ids = {l['property_id'] for l in weekly_listings if l.get('property_id')}
 for l in all_listings_today:
